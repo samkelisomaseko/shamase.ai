@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Updated App with Siri Animation</title>
+  <title>Enhanced Fluid Siri-like Animation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Oxanium:wght@500&family=Rajdhani:wght@700&family=Syncopate:wght@700&family=Audiowide&display=swap" rel="stylesheet">
   <style>
-    /* General Reset */
     * {
       margin: 0;
       padding: 0;
@@ -33,17 +32,17 @@
       --text-color: #ffffff;
       --button-bg: #333;
       --button-shadow: #111;
+      --primary-color: #0077ff;
     }
 
-    /* Light Mode Variables */
     .light-mode {
       --bg-gradient: radial-gradient(circle, #ffffff, #f3f3f3);
       --text-color: #000000;
       --button-bg: #e0e0e0;
       --button-shadow: #cccccc;
+      --primary-color: #0077ff;
     }
 
-    /* Content Section */
     .content {
       width: 90%;
       max-width: 800px;
@@ -72,7 +71,6 @@
       line-height: 1.6;
     }
 
-    /* Siri Animation */
     .siri-animation {
       position: fixed;
       top: 0;
@@ -82,17 +80,62 @@
       z-index: 1000;
       pointer-events: none;
       overflow: hidden;
+      perspective: 1000px; /* Added perspective for 3D effect */
     }
 
     .wave {
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
-      opacity: 0.8;
+      opacity: 0;
       filter: blur(40px);
+      transform-style: preserve-3d; /* Enable 3D transformations */
     }
 
-    /* Settings Panel */
+    .edge-light {
+      position: fixed;
+      opacity: 0;
+      z-index: 1001;
+      filter: blur(2px);
+      background: linear-gradient(90deg, #0077ff, #ff0077, #00ff99, #ffcc00);
+    }
+
+    .edge-light-top, .edge-light-bottom {
+      left: 0;
+      right: 0;
+      height: 5px;
+    }
+
+    .edge-light-left, .edge-light-right {
+      top: 0;
+      bottom: 0;
+      width: 5px;
+    }
+
+    .edge-light-top {
+      top: 0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    .edge-light-bottom {
+      bottom: 0;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .edge-light-left {
+      left: 0;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }
+
+    .edge-light-right {
+      right: 0;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
     .settings-panel {
       position: absolute;
       bottom: 20px;
@@ -147,16 +190,17 @@
   </style>
 </head>
 <body>
-  <!-- Content Section -->
   <div class="content" id="mainContent">
-    <h1>Interactive Siri Animation</h1>
-    <p>Watch the screen react to the animation effect!</p>
+    <h1>Enhanced Fluid Siri-like Animation</h1>
+    <p>Experience the next-level interactive animation!</p>
   </div>
 
-  <!-- Siri Animation -->
   <div class="siri-animation" id="siriAnimation"></div>
+  <div class="edge-light edge-light-top" id="edgeLightTop"></div>
+  <div class="edge-light edge-light-bottom" id="edgeLightBottom"></div>
+  <div class="edge-light edge-light-left" id="edgeLightLeft"></div>
+  <div class="edge-light edge-light-right" id="edgeLightRight"></div>
 
-  <!-- Settings Panel -->
   <div class="settings-panel" id="settingsPanel">
     <h2>Settings</h2>
     <div class="settings-option">
@@ -173,138 +217,205 @@
     </div>
   </div>
 
- <script>
-  const siriAnimation = document.getElementById('siriAnimation');
-  const mainContent = document.getElementById('mainContent');
-  const settingsPanel = document.getElementById('settingsPanel');
-  const themeToggle = document.getElementById('themeToggle');
-  const notificationPermission = document.getElementById('notificationPermission');
-  const accessibilityCheck = document.getElementById('accessibilityCheck');
-  let isLightMode = false;
+  <script>
+    const siriAnimation = document.getElementById('siriAnimation');
+    const edgeLights = [
+      document.getElementById('edgeLightTop'),
+      document.getElementById('edgeLightBottom'),
+      document.getElementById('edgeLightLeft'),
+      document.getElementById('edgeLightRight')
+    ];
+    const mainContent = document.getElementById('mainContent');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const themeToggle = document.getElementById('themeToggle');
+    const notificationPermission = document.getElementById('notificationPermission');
+    const accessibilityCheck = document.getElementById('accessibilityCheck');
+    let isLightMode = false;
+    let isAnimating = false;
 
-  // Enhanced Siri-Like Animation
-  function triggerSiriAnimation() {
-    siriAnimation.innerHTML = ''; // Clear previous animation
-    siriAnimation.style.display = 'block';
+    function createFluidWave(color, index) {
+      const wave = document.createElement('div');
+      wave.className = 'wave';
+      siriAnimation.appendChild(wave);
 
-    // Make all content react to animation
-    gsap.to([mainContent, settingsPanel], {
-      scale: 0.9,
-      filter: 'blur(5px)',
-      duration: 0.3,
-      ease: 'power2.inOut',
+      const size = Math.random() * 100 + 200;
+      const startX = Math.random() * window.innerWidth;
+      const startY = Math.random() * window.innerHeight;
+      const startZ = Math.random() * 100 - 50;
+
+      gsap.set(wave, {
+        width: size,
+        height: size,
+        x: startX,
+        y: startY,
+        z: startZ,
+        background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
+        opacity: 0,
+      });
+
+      return wave;
+    }
+
+    function animateFluidWave(wave, index) {
+      const duration = 3 + Math.random();
+      const delay = index * 0.1;
+
+      const timeline = gsap.timeline();
+
+      timeline.to(wave, {
+        opacity: 0.8,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      }, delay);
+
+      timeline.to(wave, {
+        motionPath: {
+          path: [
+            {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+            {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
+            {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+          ],
+          curviness: 2,
+        },
+        scale: 1.5,
+        rotationX: Math.random() * 360,
+        rotationY: Math.random() * 360,
+        duration: duration,
+        ease: 'none',
+      }, delay);
+
+      timeline.to(wave, {
+        opacity: 0,
+        scale: 2,
+        duration: 0.5,
+        ease: 'power2.in',
+        onComplete: () => {
+          wave.remove();
+        },
+      }, `>-0.5`);
+
+      return timeline;
+    }
+
+    function triggerHapticFeedback() {
+      if ('vibrate' in navigator) {
+        navigator.vibrate([15, 30, 15]);
+      }
+    }
+
+    function triggerSiriAnimation() {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      triggerHapticFeedback();
+
+      siriAnimation.innerHTML = '';
+      siriAnimation.style.display = 'block';
+
+      gsap.to([mainContent, settingsPanel], {
+        scale: 0.95,
+        filter: 'blur(5px)',
+        duration: 0.3,
+        ease: 'power2.inOut',
+      });
+
+      const colors = [
+        getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
+        '#ff0077',
+        '#00ff99',
+        '#ffcc00'
+      ];
+      const totalWaves = 20;
+
+      for (let i = 0; i < totalWaves; i++) {
+        const wave = createFluidWave(colors[i % colors.length], i);
+        animateFluidWave(wave, i);
+      }
+
+      // Animate edge lights
+      gsap.to(edgeLights, {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+        stagger: 0.1,
+        yoyo: true,
+        repeat: 1,
+        onComplete: () => {
+          gsap.to(edgeLights, {
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.inOut',
+          });
+        },
+      });
+
+      gsap.to([mainContent, settingsPanel], {
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 0.3,
+        delay: 3,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          siriAnimation.style.display = 'none';
+          isAnimating = false;
+        },
+      });
+    }
+
+    themeToggle.addEventListener('click', () => {
+      isLightMode = !isLightMode;
+      document.body.classList.toggle('light-mode', isLightMode);
+      themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
     });
 
-    const colors = ['#0077ff', '#ff0077', '#00ff99', '#ffcc00'];
-    const totalWaves = 8;
-    const duration = 2.5;
-
-    const timeline = gsap.timeline();
-
-    colors.forEach((color, index) => {
-      for (let i = 0; i < totalWaves; i++) {
-        const wave = document.createElement('div');
-        wave.className = 'wave';
-        siriAnimation.appendChild(wave);
-
-        const size = `${150 + i * 50}%`;
-        const delay = i * 0.1 + index * 0.05;
-        const waveDuration = duration + Math.random() * 0.5;
-
-        gsap.set(wave, {
-          width: '0%',
-          height: '0%',
-          top: '50%',
-          left: '50%',
-          background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
-          opacity: 0.8 - (i / totalWaves) * 0.5,
+    notificationPermission.addEventListener('click', () => {
+      if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification('Notifications Enabled!', {
+              body: 'You can now receive notifications.',
+            });
+          } else {
+            alert('Notification permission denied.');
+          }
         });
-
-        timeline.to(wave, {
-          width: size,
-          height: size,
-          opacity: 0,
-          duration: waveDuration,
-          delay: delay,
-          ease: 'power2.out',
-          onComplete: () => wave.remove(),
-        }, 0);
+      } else {
+        alert('Notifications are not supported in this browser.');
       }
     });
 
-    // Add ambient glow
-    const ambientGlow = document.createElement('div');
-    ambientGlow.className = 'ambient-glow';
-    siriAnimation.appendChild(ambientGlow);
-
-    gsap.set(ambientGlow, {
-      width: '200%',
-      height: '200%',
-      top: '50%',
-      left: '50%',
-      xPercent: -50,
-      yPercent: -50,
-      background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%)',
-      opacity: 0,
+    accessibilityCheck.addEventListener('click', () => {
+      alert(
+        'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
+      );
     });
 
-    timeline.to(ambientGlow, {
-      opacity: 0.5,
-      duration: 0.5,
-      yoyo: true,
-      repeat: 1,
-      ease: 'power2.inOut',
-    }, 0);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    document.body.classList.toggle('light-mode', !prefersDark.matches);
 
-    // Reset content after animation
-    timeline.to([mainContent, settingsPanel], {
-      scale: 1,
-      filter: 'blur(0px)',
-      duration: 0.3,
-      ease: 'power2.inOut',
-    }, duration - 0.3);
+    siriAnimation.addEventListener('pointermove', (event) => {
+      const { clientX, clientY } = event;
+      const { left, top, width, height } = siriAnimation.getBoundingClientRect();
+      const x = (clientX - left) / width - 0.5;
+      const y = (clientY - top) / height - 0.5;
 
-    timeline.call(() => {
-      siriAnimation.style.display = 'none';
-    }, null, duration);
-  }
-
-  // Theme Toggle
-  themeToggle.addEventListener('click', () => {
-    isLightMode = !isLightMode;
-    document.body.classList.toggle('light-mode', isLightMode);
-    themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
-  });
-
-  // Notification Permission
-  notificationPermission.addEventListener('click', () => {
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification('Notifications Enabled!', {
-            body: 'You can now receive notifications.',
-          });
-        } else {
-          alert('Notification permission denied.');
-        }
+      gsap.to('.wave', {
+        x: `+=${x * 50}`,
+        y: `+=${y * 50}`,
+        duration: 1,
+        ease: 'power2.out',
       });
-    } else {
-      alert('Notifications are not supported in this browser.');
+    });
+
+    function simulateNotification() {
+      triggerSiriAnimation();
+      new Notification('New Message', {
+        body: 'You have received a new message.',
+      });
     }
-  });
 
-  // Accessibility Check
-  accessibilityCheck.addEventListener('click', () => {
-    alert(
-      'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
-    );
-  });
-
-  // Adapting to System Color Scheme
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-  document.body.classList.toggle('light-mode', !prefersDark.matches);
-</script>
-
+    setInterval(simulateNotification, 30000);
+  </script>
 </body>
 </html>
 
