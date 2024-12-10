@@ -411,142 +411,145 @@
   </div>
 
   <script>
-    const siriAnimation = document.getElementById('siriAnimation');
-    const edgeLights = [
-      document.getElementById('edgeLightTop'),
-      document.getElementById('edgeLightBottom'),
-      document.getElementById('edgeLightLeft'),
-      document.getElementById('edgeLightRight')
+  const siriAnimation = document.getElementById('siriAnimation');
+  const edgeLights = [
+    document.getElementById('edgeLightTop'),
+    document.getElementById('edgeLightBottom'),
+    document.getElementById('edgeLightLeft'),
+    document.getElementById('edgeLightRight')
+  ];
+  const mainContent = document.getElementById('mainContent');
+  const settingsPanel = document.getElementById('settingsPanel');
+  const themeToggle = document.getElementById('themeToggle');
+  const notificationPermission = document.getElementById('notificationPermission');
+  const accessibilityCheck = document.getElementById('accessibilityCheck');
+  let isLightMode = false;
+  let isAnimating = false;
+
+  gsap.registerPlugin(MotionPathPlugin);
+
+  function createFluidWave(color, index) {
+    const wave = document.createElement('div');
+    wave.className = 'wave';
+    siriAnimation.appendChild(wave);
+
+    const size = Math.random() * 100 + 200;
+    const startX = Math.random() * window.innerWidth;
+    const startY = Math.random() * window.innerHeight;
+    const startZ = Math.random() * 100 - 50;
+
+    gsap.set(wave, {
+      width: size,
+      height: size,
+      x: startX,
+      y: startY,
+      z: startZ,
+      background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
+      opacity: 0,
+    });
+
+    return wave;
+  }
+
+  function animateFluidWave(wave, index) {
+    const duration = 1.5 + Math.random() * 0.5;
+    const delay = index * 0.03;
+
+    const timeline = gsap.timeline();
+
+    timeline.to(wave, {
+      opacity: 0.8,
+      duration: 0.2,
+      ease: 'power2.inOut',
+    }, delay);
+
+    timeline.to(wave, {
+      motionPath: {
+        path: [
+          {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+          {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
+          {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+        ],
+        curviness: 2,
+        type: "cubic",
+      },
+      scale: 1.5,
+      rotationX: Math.random() * 360,
+      rotationY: Math.random() * 360,
+      rotationZ: Math.random() * 360,
+      duration: duration,
+      ease: 'power1.inOut',
+    }, delay);
+
+    timeline.to(wave, {
+      opacity: 0,
+      scale: 2,
+      duration: 0.2,
+      ease: 'power2.in',
+      onComplete: () => {
+        wave.remove();
+      },
+    }, `>-0.2`);
+
+    return timeline;
+  }
+
+  function createPulsatingCore() {
+    const core = document.createElement('div');
+    core.className = 'wave';
+    siriAnimation.appendChild(core);
+
+    gsap.set(core, {
+      width: 100,
+      height: 100,
+      x: '50%',
+      y: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      background: `radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)`,
+      opacity: 0,
+    });
+
+    gsap.to(core, {
+      scale: 1.2,
+      opacity: 0.8,
+      duration: 0.75,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
+
+    return core;
+  }
+
+  function animateEdgeLights() {
+    const colors = [
+      'var(--primary-color)',
+      'var(--secondary-color)',
+      'var(--tertiary-color)',
+      'var(--quaternary-color)'
     ];
-    const mainContent = document.getElementById('mainContent');
-    const settingsPanel = document.getElementById('settingsPanel');
-    const themeToggle = document.getElementById('themeToggle');
-    const notificationPermission = document.getElementById('notificationPermission');
-    const accessibilityCheck = document.getElementById('accessibilityCheck');
-    let isLightMode = false;
-    let isAnimating = false;
 
-    gsap.registerPlugin(MotionPathPlugin);
-
-    function createFluidWave(color, index) {
-      const wave = document.createElement('div');
-      wave.className = 'wave';
-      siriAnimation.appendChild(wave);
-
-      const size = Math.random() * 150 + 250;
-      const startX = Math.random() * window.innerWidth;
-      const startY = Math.random() * window.innerHeight;
-      const startZ = Math.random() * 200 - 100;
-
-      gsap.set(wave, {
-        width: size,
-        height: size,
-        x: startX,
-        y: startY,
-        z: startZ,
-        opacity: 0,
-      });
-
-      return wave;
-    }
-
-    function animateFluidWave(wave, index) {
-      const duration = 1.5 + Math.random() * 0.5;
-      const delay = index * 0.05;
-
-      const timeline = gsap.timeline();
-
-      timeline.to(wave, {
-        opacity: 0.8,
+    edgeLights.forEach((light, index) => {
+      gsap.to(light, {
+        background: `linear-gradient(90deg, ${colors[index]}, ${colors[(index + 1) % 4]})`,
+        opacity: 1,
         duration: 0.3,
         ease: 'power2.inOut',
-      }, delay);
+        delay: index * 0.05,
+      });
 
-      timeline.to(wave, {
-        motionPath: {
-          path: [
-            {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
-            {x: Math.random() * 400 - 200, y: Math.random() * 400 - 200, z: Math.random() * 200 - 100},
-            {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
-          ],
-          curviness: 2,
-          type: "cubic",
-        },
-        scale: 1.8,
-        rotationX: Math.random() * 720 - 360,
-        rotationY: Math.random() * 720 - 360,
-        rotationZ: Math.random() * 720 - 360,
-        duration: duration,
-        ease: 'power1.inOut',
-      }, delay);
-
-      timeline.to(wave, {
+      gsap.to(light, {
         opacity: 0,
-        scale: 2.2,
         duration: 0.3,
-        ease: 'power2.in',
-        onComplete: () => {
-          wave.remove();
-        },
-      }, `>-0.3`);
-
-      return timeline;
-    }
-
-    function createPulsatingCore() {
-      const core = document.createElement('div');
-      core.className = 'pulsating-core';
-      siriAnimation.appendChild(core);
-
-      gsap.set(core, {
-        width: 150,
-        height: 150,
-        x: '50%',
-        y: '50%',
-        xPercent: -50,
-        yPercent: -50,
-        opacity: 0,
+        ease: 'power2.inOut',
+        delay: 1.7 + index * 0.05,
       });
+    });
+  }
 
-      gsap.to(core, {
-        scale: 1.5,
-        opacity: 0.8,
-        duration: 0.75,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power1.inOut',
-      });
-
-      return core;
-    }
-
-    function animateEdgeLights() {
-      const colors = [
-        'var(--primary-color)',
-        'var(--secondary-color)',
-        'var(--tertiary-color)',
-        'var(--quaternary-color)'
-      ];
-
-      edgeLights.forEach((light, index) => {
-        gsap.to(light, {
-          background: `linear-gradient(90deg, ${colors[index]}, ${colors[(index + 1) % 4]})`,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.inOut',
-          delay: index * 0.1,
-        });
-
-        gsap.to(light, {
-          opacity: 0,
-          duration: 0.5,
-          ease: 'power2.inOut',
-          delay: 2.5 + index * 0.1,
-        });
-      });
-    }
-
-    function playAudioFeedback() {
+  function playAudioFeedback() {
+    try {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
@@ -562,189 +565,272 @@
 
       oscillator.start();
       oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (error) {
+      console.error('Error playing audio feedback:', error);
     }
+  }
 
-    function triggerHapticFeedback() {
-      if ('vibrate' in navigator) {
-        navigator.vibrate([15, 30, 15]);
-      }
+  function triggerHapticFeedback() {
+    if ('vibrate' in navigator) {
+      navigator.vibrate([15, 30, 15]);
     }
+  }
 
-    function triggerSiriAnimation() {
-      if (isAnimating) return;
-      isAnimating = true;
+  function triggerSiriAnimation() {
+    if (isAnimating) return;
+    isAnimating = true;
 
-      triggerHapticFeedback();
-      playAudioFeedback();
+    triggerHapticFeedback();
+    playAudioFeedback();
 
-      siriAnimation.innerHTML = '';
-      siriAnimation.style.display = 'block';
+    siriAnimation.innerHTML = '';
+    siriAnimation.style.display = 'block';
 
-      gsap.to([mainContent, settingsPanel], {
-        scale: 0.95,
-        filter: 'blur(5px)',
-        duration: 0.3,
-        ease: 'power2.inOut',
-      });
-
-      const colors = [
-        getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
-        getComputedStyle(document.documentElement).getPropertyValue('--secondary-color'),
-        getComputedStyle(document.documentElement).getPropertyValue('--tertiary-color'),
-        getComputedStyle(document.documentElement).getPropertyValue('--quaternary-color')
-      ];
-      const totalWaves = 40;
-      const mainTimeline = gsap.timeline();
-
-      const core = createPulsatingCore();
-
-      for (let i = 0; i < totalWaves; i++) {
-        const wave = createFluidWave(colors[i % colors.length], i);
-        const waveAnimation = animateFluidWave(wave, i);
-        mainTimeline.add(waveAnimation, i * 0.03);
-      }
-
-      animateEdgeLights();
-
-      mainTimeline.to([mainContent, settingsPanel], {
-        scale: 1,
-        filter: 'blur(0px)',
-        duration: 0.3,
-        delay: 1.7,
-        ease: 'power2.inOut',
-      });
-
-      mainTimeline.call(() => {
-        siriAnimation.style.display = 'none';
-        core.remove();
-        isAnimating = false;
-      }, null, 2);
-    }
-
-    themeToggle.addEventListener('click', () => {
-      isLightMode = !isLightMode;
-      document.body.classList.toggle('light-mode', isLightMode);
-      themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
+    gsap.to([mainContent, settingsPanel], {
+      scale: 0.95,
+      filter: 'blur(5px)',
+      duration: 0.2,
+      ease: 'power2.inOut',
     });
 
-    notificationPermission.addEventListener('click', () => {
-      if ('Notification' in window) {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            triggerSiriAnimation();
-            setTimeout(() => {
-              new Notification('Notifications Enabled!', {
-                body: 'You can now receive notifications.',
-              });
-            }, 1000);
-          } else {
-            alert('Notification permission denied.');
-          }
-        });
-      } else {
-        alert('Notifications are not supported in this browser.');
-      }
+    const colors = [
+      getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
+      getComputedStyle(document.documentElement).getPropertyValue('--secondary-color'),
+      getComputedStyle(document.documentElement).getPropertyValue('--tertiary-color'),
+      getComputedStyle(document.documentElement).getPropertyValue('--quaternary-color')
+    ];
+    const totalWaves = 15;
+    const mainTimeline = gsap.timeline();
+
+    const core = createPulsatingCore();
+
+    for (let i = 0; i < totalWaves; i++) {
+      const wave = createFluidWave(colors[i % colors.length], i);
+      const waveAnimation = animateFluidWave(wave, i);
+      mainTimeline.add(waveAnimation, i * 0.02);
+    }
+
+    animateEdgeLights();
+
+    mainTimeline.to([mainContent, settingsPanel], {
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: 0.2,
+      delay: 1.5,
+      ease: 'power2.inOut',
     });
 
-    accessibilityCheck.addEventListener('click', () => {
-      alert(
-        'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
-      );
-    });
+    mainTimeline.call(() => {
+      siriAnimation.style.display = 'none';
+      core.remove();
+      isAnimating = false;
+    }, null, 1.8);
+  }
 
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    document.body.classList.toggle('light-mode', !prefersDark.matches);
+  themeToggle.addEventListener('click', () => {
+    isLightMode = !isLightMode;
+    document.body.classList.toggle('light-mode', isLightMode);
+    themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
+  });
 
-    siriAnimation.addEventListener('pointermove', (event) => {
-      if (!isAnimating) return;
-      const { clientX, clientY } = event;
-      const { left, top, width, height } = siriAnimation.getBoundingClientRect();
-      const x = (clientX - left) / width - 0.5;
-      const y = (clientY - top) / height - 0.5;
-
-      gsap.to('.wave', {
-        x: `+=${x * 50}`,
-        y: `+=${y * 50}`,
-        duration: 1,
-        ease: 'power2.out',
+  notificationPermission.addEventListener('click', () => {
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          triggerSiriAnimation();
+          setTimeout(() => {
+            new Notification('Notifications Enabled!', {
+              body: 'You can now receive notifications.',
+            });
+          }, 1000);
+        } else {
+          alert('Notification permission denied.');
+        }
       });
+    } else {
+      alert('Notifications are not supported in this browser.');
+    }
+  });
+
+  accessibilityCheck.addEventListener('click', () => {
+    alert(
+      'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
+    );
+  });
+
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  document.body.classList.toggle('light-mode', !prefersDark.matches);
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  const debouncedHandleOrientation = debounce(handleOrientation, 16);
+  const debouncedHandlePointerMove = debounce((event) => {
+    if (!isAnimating) return;
+    const { clientX, clientY } = event;
+    const { left, top, width, height } = siriAnimation.getBoundingClientRect();
+    const x = (clientX - left) / width - 0.5;
+    const y = (clientY - top) / height - 0.5;
+
+    gsap.to('.wave', {
+      x: `+=${x * 30}`,
+      y: `+=${y * 30}`,
+      duration: 0.5,
+      ease: 'power2.out',
     });
+  }, 16);
 
-    if ('DeviceOrientationEvent' in window) {
-      window.addEventListener('deviceorientation', handleOrientation);
+
+  if ('DeviceOrientationEvent' in window) {
+    window.addEventListener('deviceorientation', debouncedHandleOrientation, false);
+  } else {
+    console.warn('Device orientation not supported on this device.');
+  }
+
+  siriAnimation.addEventListener('pointermove', debouncedHandlePointerMove);
+
+
+  function handleOrientation(event) {
+    if (!isAnimating) return;
+    const x = event.beta;  // In degree in the range [-180,180]
+    const y = event.gamma; // In degree in the range [-90,90]
+    
+    gsap.to('.wave', {
+      rotationX: x * 0.3,
+      rotationY: y * 0.3,
+      duration: 0.3,
+      ease: 'power1.out',
+    });
+  }
+
+  function simulateNotification(type) {
+    if (!isAnimating) {
+      triggerSiriAnimation();
+      setTimeout(() => {
+        switch(type) {
+          case 'message':
+            updateDynamicIsland('New Message', 'You have a new message');
+            break;
+          case 'call':
+            updateDynamicIsland('Incoming Call', 'John Doe is calling');
+            break;
+          case 'music':
+            updateDynamicIsland('Now Playing', 'Shape of You - Ed Sheeran');
+            break;
+          default:
+            updateDynamicIsland('New Notification', 'You have a new notification');
+        }
+      }, 1000);
     }
+  }
 
-    function handleOrientation(event) {
-      if (!isAnimating) return;
-      const x = event.beta;  // In degree in the range [-180,180]
-      const y = event.gamma; // In degree in the range [-90,90]
-      
-      gsap.to('.wave', {
-        rotationX: x * 0.5,
-        rotationY: y * 0.5,
-        duration: 0.5,
-        ease: 'power1.out',
-      });
-    }
-
-    function simulateNotification() {
-      if (!isAnimating) {
-        triggerSiriAnimation();
-        setTimeout(() => {
-          new Notification('New Message', {
-            body: 'You have received a new message.',
-          });
-        }, 1000);
-      }
-    }
-
-    // Simulate notifications every 30 seconds
-    setInterval(simulateNotification, 30000);
-
-    // Dynamic Island functionality
-    const dynamicIsland = document.getElementById('dynamicIsland');
+  function updateDynamicIsland(title, content) {
+    const titleElement = document.getElementById('title');
+    titleElement.textContent = title;
+    
+    const contentElement = document.createElement('p');
+    contentElement.textContent = content;
+    contentElement.style.fontSize = '0.8rem';
+    
     const collapsedContent = document.getElementById('collapsedContent');
-    const expandedContent = document.getElementById('expandedContent');
-
-    // Expand Dynamic Island
-    collapsedContent.addEventListener('click', () => {
-      gsap.to(dynamicIsland, {
-        height: 450,
-        width: 400,
-        duration: 0.5,
-        ease: "power2.out",
-      });
-      gsap.to(collapsedContent, {
-        opacity: 0,
-        duration: 0.2,
-        onComplete: () => {
-          collapsedContent.style.display = "none";
-          expandedContent.style.display = "flex";
-        },
-      });
-    });
-
-    // Collapse Dynamic Island
-    document.body.addEventListener('click', (event) => {
-      if (!dynamicIsland.contains(event.target)) {
-        minimizeDynamicIsland();
-      }
-    });
-
-    function minimizeDynamicIsland() {
-      expandedContent.style.display = "none";
-      collapsedContent.style.display = "flex";
-      gsap.to(dynamicIsland, {
-        height: 70,
-        width: 300,
-        duration: 0.5,
-        ease: "power2.out",
-      });
+    if (collapsedContent.children.length > 2) {
+      collapsedContent.removeChild(collapsedContent.lastChild);
     }
+    collapsedContent.appendChild(contentElement);
+    
+    gsap.from(contentElement, {
+      opacity: 0,
+      y: 10,
+      duration: 0.3,
+      ease: 'power2.out'
+    });
 
-    // Swipe-to-dismiss for Dynamic Island
-    const mc = new Hammer(dynamicIsland);
-    mc.on('swipe', () => minimizeDynamicIsland());
+    expandDynamicIsland();
+  }
+
+  // Dynamic Island functionality
+  const dynamicIsland = document.getElementById('dynamicIsland');
+  const collapsedContent = document.getElementById('collapsedContent');
+  const expandedContent = document.getElementById('expandedContent');
+
+  function expandDynamicIsland() {
+    gsap.to(dynamicIsland, {
+      height: 450,
+      width: 400,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    gsap.to(collapsedContent, {
+      opacity: 0,
+      duration: 0.2,
+      onComplete: () => {
+        collapsedContent.style.display = "none";
+        expandedContent.style.display = "flex";
+        gsap.from(expandedContent, {
+          opacity: 0,
+          y: -10,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      },
+    });
+  }
+
+  function minimizeDynamicIsland() {
+    gsap.to(expandedContent, {
+      opacity: 0,
+      y: -10,
+      duration: 0.2,
+      ease: "power2.in",
+      onComplete: () => {
+        expandedContent.style.display = "none";
+        collapsedContent.style.display = "flex";
+        gsap.to(dynamicIsland, {
+          height: 70,
+          width: 300,
+          duration: 0.4,
+          ease: "power2.inOut",
+        });
+        gsap.from(collapsedContent, {
+          opacity: 0,
+          y: 5,
+          duration: 0.2,
+          ease: "power2.out"
+        });
+      },
+    });
+  }
+
+  // Swipe-to-dismiss for Dynamic Island
+  const mc = new Hammer(dynamicIsland);
+  mc.on('swipe', (ev) => {
+    if (ev.direction === Hammer.DIRECTION_UP) {
+      minimizeDynamicIsland();
+    }
+  });
+
+  document.body.addEventListener('click', (event) => {
+    if (!dynamicIsland.contains(event.target)) {
+      minimizeDynamicIsland();
+    }
+  });
+
+  collapsedContent.addEventListener('click', expandDynamicIsland);
+
+  document.querySelector('button[onclick="triggerSiriAnimation()"]').addEventListener('click', () => {
+    const notificationTypes = ['message', 'call', 'music'];
+    const randomType = notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
+    simulateNotification(randomType);
+  });
   </script>
 </body>
 </html>
