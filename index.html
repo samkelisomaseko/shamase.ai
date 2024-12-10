@@ -433,10 +433,10 @@
       wave.className = 'wave';
       siriAnimation.appendChild(wave);
 
-      const size = Math.random() * 100 + 200;
+      const size = Math.random() * 150 + 250;
       const startX = Math.random() * window.innerWidth;
       const startY = Math.random() * window.innerHeight;
-      const startZ = Math.random() * 100 - 50;
+      const startZ = Math.random() * 200 - 100;
 
       gsap.set(wave, {
         width: size,
@@ -444,7 +444,6 @@
         x: startX,
         y: startY,
         z: startZ,
-        background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
         opacity: 0,
       });
 
@@ -452,68 +451,67 @@
     }
 
     function animateFluidWave(wave, index) {
-      const duration = 3 + Math.random() * 2;
-      const delay = index * 0.1;
+      const duration = 1.5 + Math.random() * 0.5;
+      const delay = index * 0.05;
 
       const timeline = gsap.timeline();
 
       timeline.to(wave, {
         opacity: 0.8,
-        duration: 0.5,
+        duration: 0.3,
         ease: 'power2.inOut',
       }, delay);
 
       timeline.to(wave, {
         motionPath: {
           path: [
-            {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
             {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
-            {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+            {x: Math.random() * 400 - 200, y: Math.random() * 400 - 200, z: Math.random() * 200 - 100},
+            {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
           ],
           curviness: 2,
           type: "cubic",
         },
-        scale: 1.5,
-        rotationX: Math.random() * 360,
-        rotationY: Math.random() * 360,
-        rotationZ: Math.random() * 360,
+        scale: 1.8,
+        rotationX: Math.random() * 720 - 360,
+        rotationY: Math.random() * 720 - 360,
+        rotationZ: Math.random() * 720 - 360,
         duration: duration,
         ease: 'power1.inOut',
       }, delay);
 
       timeline.to(wave, {
         opacity: 0,
-        scale: 2,
-        duration: 0.5,
+        scale: 2.2,
+        duration: 0.3,
         ease: 'power2.in',
         onComplete: () => {
           wave.remove();
         },
-      }, `>-0.5`);
+      }, `>-0.3`);
 
       return timeline;
     }
 
     function createPulsatingCore() {
       const core = document.createElement('div');
-      core.className = 'wave';
+      core.className = 'pulsating-core';
       siriAnimation.appendChild(core);
 
       gsap.set(core, {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
         x: '50%',
         y: '50%',
         xPercent: -50,
         yPercent: -50,
-        background: `radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)`,
         opacity: 0,
       });
 
       gsap.to(core, {
-        scale: 1.2,
+        scale: 1.5,
         opacity: 0.8,
-        duration: 1,
+        duration: 0.75,
         repeat: -1,
         yoyo: true,
         ease: 'power1.inOut',
@@ -595,7 +593,7 @@
         getComputedStyle(document.documentElement).getPropertyValue('--tertiary-color'),
         getComputedStyle(document.documentElement).getPropertyValue('--quaternary-color')
       ];
-      const totalWaves = 30;
+      const totalWaves = 40;
       const mainTimeline = gsap.timeline();
 
       const core = createPulsatingCore();
@@ -603,7 +601,7 @@
       for (let i = 0; i < totalWaves; i++) {
         const wave = createFluidWave(colors[i % colors.length], i);
         const waveAnimation = animateFluidWave(wave, i);
-        mainTimeline.add(waveAnimation, i * 0.05);
+        mainTimeline.add(waveAnimation, i * 0.03);
       }
 
       animateEdgeLights();
@@ -612,7 +610,7 @@
         scale: 1,
         filter: 'blur(0px)',
         duration: 0.3,
-        delay: 2.7,
+        delay: 1.7,
         ease: 'power2.inOut',
       });
 
@@ -620,7 +618,7 @@
         siriAnimation.style.display = 'none';
         core.remove();
         isAnimating = false;
-      }, null, 3);
+      }, null, 2);
     }
 
     themeToggle.addEventListener('click', () => {
