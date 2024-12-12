@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Fluid Siri-like Animation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Physics2DPlugin.min.js"></script>
+  <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Oxanium:wght@500&family=Rajdhani:wght@700&family=Syncopate:wght@700&family=Audiowide&display=swap" rel="stylesheet">
+  <style>
+   /* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: var(--text-color);
+  background: var(--bg-gradient);
+  padding: 20px;
+}
+
+/* Root variables for theming */
+:root {
+  --bg-gradient: radial-gradient(circle, #14161A, #000);
+  --text-color: #ffffff;
+  --button-bg: #333;
+  --button-shadow: #111;
+  --primary-color: #0077ff;
+}
+
+/* Light mode variables */
+.light-mode {
+  --bg-gradient: radial-gradient(circle, #ffffff, #f3f3f3);
+  --text-color: #000000;
+  --button-bg: #e0e0e0;
+  --button-shadow: #cccccc;
+  --primary-color: #0077ff;
+}
+
+/* Main content styles */
+.content {
+  width: 90%;
+  margin-top:30px;
+  max-width: 800px;
+  text-align: center;
+  margin: clamp(20px, 5vh, 40px) auto;
+  padding: clamp(15px, 3vw, 30px);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  color: var(--text-color);
+  font-family: 'Audiowide', sans-serif;
+  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.content h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  margin-bottom: clamp(10px, 2vw, 20px);
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+}
+
+.content p {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* Siri-like animation styles */
+.siri-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.wave {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  filter: blur(40px);
+  transform-style: preserve-3d;
+}
+
+/* Edge lighting styles for bolder and more vivid rainbow effect */
+.edge-light {
+  position: fixed;
+  opacity: 0;
+  z-index: 1001;
+  filter: blur(5px); /* Reduced blur for sharper edges */
+  background: linear-gradient(45deg, 
+    #ff3f34, /* Red */
+    #ff9d00, /* Orange */
+    #f3e200, /* Yellow */
+    #00d6b6, /* Turquoise */
+    #0099ff, /* Blue */
+    #9a00ff, /* Purple */
+    #ff3f34 /* Back to Red */
+  );
+  background-size: 200% 200%; /* Smaller background size for a more defined movement */
+  animation: rainbowPulse 3s ease-in-out infinite, edgeGlow 1s ease-in-out infinite; /* Multiple animations for pulsing */
+}
+
+/* Keyframe for smooth rainbow animation */
+@keyframes rainbowPulse {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Keyframe for the pulsing glow effect */
+@keyframes edgeGlow {
+  0% {
+    filter: blur(5px) brightness(1);
+  }
+  50% {
+    filter: blur(10px) brightness(2); /* Stronger glow */
+  }
+  100% {
+    filter: blur(5px) brightness(1);
+  }
+}
+
+/* Edge light positions */
+.edge-light-top, .edge-light-bottom {
+  left: 0;
+  right: 0;
+  height: 12px; /* Increased thickness */
+}
+
+.edge-light-left, .edge-light-right {
+  top: 0;
+  bottom: 0;
+  width: 12px; /* Increased thickness */
+}
+
+.edge-light-top {
+  top: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.edge-light-bottom {
+  bottom: 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.edge-light-left {
+  left: 0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.edge-light-right {
+  right: 0;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+/* Edge lighting styles for bolder and more vivid rainbow effect */
+.edge-light {
+  position: fixed;
+  opacity: 0;
+  z-index: 1001;
+  filter: blur(5px); /* Reduced blur for sharper edges */
+  background: linear-gradient(45deg, 
+    #ff3f34, /* Red */
+    #ff9d00, /* Orange */
+    #f3e200, /* Yellow */
+    #00d6b6, /* Turquoise */
+    #0099ff, /* Blue */
+    #9a00ff, /* Purple */
+    #ff3f34 /* Back to Red */
+  );
+  background-size: 200% 200%; /* Smaller background size for a more defined movement */
+  animation: rainbowPulse 3s ease-in-out infinite, edgeGlow 1s ease-in-out infinite; /* Multiple animations for pulsing */
+}
+
+/* Keyframe for smooth rainbow animation */
+@keyframes rainbowPulse {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Keyframe for the pulsing glow effect */
+@keyframes edgeGlow {
+  0% {
+    filter: blur(5px) brightness(1);
+  }
+  50% {
+    filter: blur(10px) brightness(2); /* Stronger glow */
+  }
+  100% {
+    filter: blur(5px) brightness(1);
+  }
+}
+
+/* Edge light positions */
+.edge-light-top, .edge-light-bottom {
+  left: 0;
+  right: 0;
+  height: 12px; /* Increased thickness */
+}
+
+.edge-light-left, .edge-light-right {
+  top: 0;
+  bottom: 0;
+  width: 12px; /* Increased thickness */
+}
+
+.edge-light-top {
+  top: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.edge-light-bottom {
+  bottom: 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.edge-light-left {
+  left: 0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.edge-light-right {
+  right: 0;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* Settings panel styles */
+.settings-panel {
+  position: absolute;
+  bottom: 20px;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  color: var(--text-color);
+  font-family: 'Audiowide', sans-serif;
+  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.settings-panel h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.settings-option {
+  margin: 10px 0;
+}
+
+.settings-option button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: var(--button-bg);
+  color: var(--text-color);
+  outline: none;
+  box-shadow: 3px 3px 8px var(--button-shadow), -3px -3px 8px rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+}
+
+.settings-option button:hover {
+  background: linear-gradient(45deg, #0077ff, #ff0077);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.settings-option button:active {
+  transform: translateY(2px);
+}
+
+/* Dynamic Island Styles */
+#dynamicIsland {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  min-height: 80px;
+  width: 320px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+  z-index:1000;
+}
+
+/* Collapsed Content Styles */
+#collapsedContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 12px 22px;
+}
+
+#collapsedContent img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+#collapsedContent span {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Expanded Content Styles */
+#expandedContent {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding: 25px;
+}
+
+.module {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.module:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+}
+
+.module-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff512f, #dd2476);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 1.6rem;
+}
+
+.module-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.module-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color:#ffffff;
+}
+
+.module-subtitle {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+  .expanded-content{
+    color:#ffffff;
+  }
+    .ripple {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: rippleEffect 1s ease-out;
+      pointer-events: none;
+    }
+    @keyframes rippleEffect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+#blueDropButton:hover {
+    background: linear-gradient(45deg, #0077ff, #ff0077);
+    color: #fff;
+    transform: translateY(-2px);
+}
+  
+  #blueDropButton{
+  transform: translateY(2px);
+  }
+  </style>
+
+</head>
+<body>
+  <!-- Main Content -->
+  <div class="content" id="mainContent">
+    <h1>BlueDrop, Dynamic Island With IOS Animation</h1>
+    <p>Experience the next-level interactive animation!</p>
+    <!-- BlueDrop Button -->
+<button id="blueDropButton" style="width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: var(--button-bg);
+  color: var(--text-color);
+  outline: none;
+  box-shadow: 3px 3px 8px var(--button-shadow), -3px -3px 8px rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+">BlueDrop</button>
+  </div>
+
+  <!-- Siri-like Animation -->
+  <div class="siri-animation" id="siriAnimation"></div>
+  <div class="edge-light edge-light-top" id="edgeLightTop"></div>
+  <div class="edge-light edge-light-bottom" id="edgeLightBottom"></div>
+  <div class="edge-light edge-light-left" id="edgeLightLeft"></div>
+  <div class="edge-light edge-light-right" id="edgeLightRight"></div>
+
+ <div id="dynamicIsland">
+    <!-- Collapsed Content -->
+    <div id="collapsedContent">
+      <img id="latestIcon" src="https://via.placeholder.com/50" alt="Notification Icon">
+      <span id="latestText">Dynamic Island</span>
+    </div>
+
+    <!-- Expanded Content -->
+    <div id="expandedContent">
+      <!-- Music Module -->
+      <div class="module" data-app="Music">
+        <div class="module-icon">🎵</div>
+        <div class="module-details">
+          <div class="module-title">Now Playing</div>
+          <div class="module-subtitle">"Shape of You" - Ed Sheeran</div>
+          <div class="expanded-content">Volume: 75% | Play | Pause | Skip</div>
+        </div>
+      </div>
+
+      <!-- Timer Module -->
+      <div class="module" data-app="Timer">
+        <div class="module-icon">⏲</div>
+        <div class="module-details">
+          <div class="module-title">Timer</div>
+          <div class="module-subtitle">00:15:32</div>
+          <div class="expanded-content">Reset | Add 5 mins | Stop</div>
+        </div>
+      </div>
+
+      <!-- Call Module -->
+      <div class="module" data-app="Call">
+        <div class="module-icon">📞</div>
+        <div class="module-details">
+          <div class="module-title">Active Call</div>
+          <div class="module-subtitle">John Doe</div>
+          <div class="expanded-content">Mute | Speaker | End Call</div>
+        </div>
+      </div>
+
+      <!-- Live Activity -->
+      <div class="module" data-app="Activity">
+        <div class="module-icon">🏀</div>
+        <div class="module-details">
+          <div class="module-title">Live Scores</div>
+          <div class="module-subtitle">Team A: 78 - Team B: 84</div>
+          <div class="expanded-content">View Details</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <h2>Settings</h2>
+    <div class="settings-option">
+      <button id="themeToggle">Toggle Theme</button>
+    </div>
+    <div class="settings-option">
+      <button id="notificationPermission">Enable Notifications</button>
+    </div>
+    <div class="settings-option">
+      <button id="accessibilityCheck">Enable Accessibility</button>
+    </div>
+    <div class="settings-option">
+      <button onclick="triggerSiriAnimation()">Test Animation</button>
+    </div>
+  </div>
+  
+  
+  
+<script>
+  /* Global variables */
+  const siriAnimation = document.getElementById('siriAnimation');
+  const edgeLights = [
+    document.getElementById('edgeLightTop'),
+    document.getElementById('edgeLightBottom'),
+    document.getElementById('edgeLightLeft'),
+    document.getElementById('edgeLightRight')
+  ];
+  const mainContent = document.getElementById('mainContent');
+  const settingsPanel = document.getElementById('settingsPanel');
+  const themeToggle = document.getElementById('themeToggle');
+  const notificationPermission = document.getElementById('notificationPermission');
+  const accessibilityCheck = document.getElementById('accessibilityCheck');
+  let isLightMode = false;
+  let isAnimating = false;
+
+  /* Dynamic Island functionality */
+  const dynamicIsland = document.getElementById('dynamicIsland');
+  const collapsedContent = document.getElementById('collapsedContent');
+  const expandedContent = document.getElementById('expandedContent');
+
+  // Update the latest notification
+  let latestNotification = { app: "Music", icon: "🎵", text: "Now Playing: Shape of You" };
+  function updateLatestNotification(notification) {
+    latestNotification = notification;
+    latestIcon.src = `https://via.placeholder.com/50?text=${notification.icon}`;
+    latestText.textContent = notification.text;
+  }
+  updateLatestNotification(latestNotification);
+
+  // Expand/Collapse the Dynamic Island
+  collapsedContent.addEventListener('click', () => {
+    gsap.to(dynamicIsland, { height: "auto", width: 350, duration: 0.5, ease: "power2.out" });
+    collapsedContent.style.display = "none";
+    expandedContent.style.display = "flex";
+  });
+
+  document.body.addEventListener('click', (e) => {
+    if (!dynamicIsland.contains(e.target)) {
+      gsap.to(dynamicIsland, { height: 70, width: 300, duration: 0.5, ease: "power2.in" });
+      collapsedContent.style.display = "flex";
+      expandedContent.style.display = "none";
+    }
+  });
+
+  /* Siri-like animation functionality */
+  function createFluidWave(color, index) {
+    const wave = document.createElement('div');
+    wave.className = 'wave';
+    siriAnimation.appendChild(wave);
+
+    const size = Math.random() * 100 + 200;
+    const startX = Math.random() * window.innerWidth;
+    const startY = Math.random() * window.innerHeight;
+    const startZ = Math.random() * 100 - 50;
+
+    gsap.set(wave, {
+      width: size,
+      height: size,
+      x: startX,
+      y: startY,
+      z: startZ,
+      background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
+      opacity: 0,
+    });
+
+    return wave;
+  }
+
+  function animateFluidWave(wave, index) {
+    const duration = 3 + Math.random();
+    const delay = index * 0.1;
+
+    const timeline = gsap.timeline();
+
+    timeline.to(wave, {
+      opacity: 0.8,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    }, delay);
+
+    timeline.to(wave, {
+      motionPath: {
+        path: [
+          {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+          {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
+          {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+        ],
+        curviness: 2,
+      },
+      scale: 1.5,
+      rotationX: Math.random() * 360,
+      rotationY: Math.random() * 360,
+      duration: duration,
+      ease: 'none',
+    }, delay);
+
+    timeline.to(wave, {
+      opacity: 0,
+      scale: 2,
+      duration: 0.5,
+      ease: 'power2.in',
+      onComplete: () => {
+        wave.remove();
+      },
+    }, `>-0.5`);
+
+    return timeline;
+  }
+
+  function triggerHapticFeedback() {
+    if ('vibrate' in navigator) {
+      navigator.vibrate([15, 30, 15]);
+    }
+  }
+
+  function triggerSiriAnimation() {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    triggerHapticFeedback();
+
+    siriAnimation.innerHTML = '';
+    siriAnimation.style.display = 'block';
+
+    gsap.to([mainContent, settingsPanel], {
+      scale: 0.95,
+      filter: 'blur(5px)',
+      duration: 0.3,
+      ease: 'power2.inOut',
+    });
+
+    const colors = [
+      getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
+      '#ff0077',
+      '#00ff99',
+      '#ffcc00'
+    ];
+    const totalWaves = 20;
+
+    for (let i = 0; i < totalWaves; i++) {
+      const wave = createFluidWave(colors[i % colors.length], i);
+      animateFluidWave(wave, i);
+    }
+
+    // Animate edge lights
+    gsap.to(edgeLights, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.inOut',
+      stagger: 0.1,
+      yoyo: true,
+      repeat: 1,
+      onComplete: () => {
+        gsap.to(edgeLights, {
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.inOut',
+        });
+      },
+    });
+
+    gsap.to([mainContent, settingsPanel], {
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: 0.3,
+      delay: 3,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        siriAnimation.style.display = 'none';
+        isAnimating = false;
+      },
+    });
+  }
+
+  themeToggle.addEventListener('click', () => {
+    isLightMode = !isLightMode;
+    document.body.classList.toggle('light-mode', isLightMode);
+    themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
+  });
+
+  notificationPermission.addEventListener('click', () => {
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          new Notification('Notifications Enabled!', {
+            body: 'You can now receive notifications.',
+          });
+        } else {
+          alert('Notification permission denied.');
+        }
+      });
+    } else {
+      alert('Notifications are not supported in this browser.');
+    }
+  });
+
+  accessibilityCheck.addEventListener('click', () => {
+    alert(
+      'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
+    );
+  });
+
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  document.body.classList.toggle('light-mode', !prefersDark.matches);
+
+  siriAnimation.addEventListener('pointermove', (event) => {
+    const { clientX, clientY } = event;
+    const { left, top, width, height } = siriAnimation.getBoundingClientRect();
+    const x = (clientX - left) / width - 0.5;
+    const y = (clientY - top) / height - 0.5;
+
+    gsap.to('.wave', {
+      x: `+=${x * 50}`,
+      y: `+=${y * 50}`,
+      duration: 1,
+      ease: 'power2.out',
+    });
+  });
+
+  function simulateNotification() {
+    triggerSiriAnimation();
+    new Notification('New Message', {
+      body: 'You have received a new message.',
+    });
+  }
+
+  setInterval(simulateNotification, 30000);
+
+  /* Swipe-to-dismiss functionality for Dynamic Island Modules */
+  const modules = document.querySelectorAll('.module');
+  
+  modules.forEach((module) => {
+    const hammer = new Hammer(module);
+
+    // Enable swipe-to-dismiss feature
+    hammer.on('swipe', (e) => {
+      gsap.to(module, {
+        x: e.deltaX > 0 ? 500 : -500,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        onComplete: () => module.remove(),
+      });
+    });
+
+    // Long press to trigger an alert for module-specific actions
+    hammer.on('press', () => {
+      alert(`Opening ${module.dataset.app}`);
+    });
+
+    // Double-click to expand the module
+    let clickCount = 0;
+    module.addEventListener('click', () => {
+      clickCount++;
+      setTimeout(() => (clickCount = 0), 400);
+      if (clickCount === 2) {
+        module.classList.toggle('expanded');
+      }
+    });
+  });
+  
+  
+  
+</script>
+<script>
+  // Get the BlueDrop button and main content container
+  const blueDropButton = document.getElementById('blueDropButton');
+  const mainContent = document.getElementById('mainContent'); // Assuming the content div ID is 'mainContent'
+
+  // Airdrop animation content as a separate HTML string
+  const airdropAnimation = `
+    <div class="widget-container" id="widgetContainer">
+      <div class="fluid" id="fluidBackground"></div>
+      <div class="content">
+        <div class="message" id="message">Tap to start BlueDrop</div>
+      </div>
+      <div class="success-message" id="successMessage">Transfer Complete!</div>
+      <div class="error-message" id="errorMessage">Transfer Failed</div>
+      <div class="loading-message" id="loadingMessage">Transferring...</div>
+      <button class="retry-button" id="retryButton">Retry</button>
+    </div>
+  `;
+
+  // Load the animation HTML when button is clicked
+  blueDropButton.addEventListener('click', () => {
+    // Inject animation into the main content
+    mainContent.innerHTML = airdropAnimation;
+
+    // Re-initialize animations or scripts (referencing your provided script)
+    const fluidBackground = document.getElementById('fluidBackground');
+    const message = document.getElementById('message');
+    const retryButton = document.getElementById('retryButton');
+
+    function startTransfer() {
+      // Initialize transfer logic...
+      console.log("BlueDrop transfer animation started");
+    }
+
+    fluidBackground.addEventListener('click', startTransfer);
+    retryButton.addEventListener('click', () => {
+      console.log("Retry logic triggered");
+    });
+  });
+  
+  
+</script>
+
+</body>
+</html>
