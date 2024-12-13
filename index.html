@@ -3,415 +3,313 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Fluid Siri-like Animation</title>
+  <title>Enhanced Fluid BlueDrop Animation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Physics2DPlugin.min.js"></script>
   <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Oxanium:wght@500&family=Rajdhani:wght@700&family=Syncopate:wght@700&family=Audiowide&display=swap" rel="stylesheet">
   <style>
-   /* Global styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
-}
+    /* Global styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
 
-body {
-  font-family: 'Rajdhani', sans-serif;
-  min-height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  color: var(--text-color);
-  background: var(--bg-gradient);
-  padding: 20px;
-}
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      color: var(--text-color);
+      background: var(--bg-gradient);
+      padding: 20px;
+    }
 
-/* Root variables for theming */
-:root {
-  --bg-gradient: radial-gradient(circle, #14161A, #000);
-  --text-color: #ffffff;
-  --button-bg: #333;
-  --button-shadow: #111;
-  --primary-color: #0077ff;
-}
+    /* Root variables for theming */
+    :root {
+      --bg-gradient: radial-gradient(circle, #14161A, #000);
+      --text-color: #ffffff;
+      --button-bg: #333;
+      --button-shadow: #111;
+      --primary-color: #0077ff;
+    }
 
-/* Light mode variables */
-.light-mode {
-  --bg-gradient: radial-gradient(circle, #ffffff, #f3f3f3);
-  --text-color: #000000;
-  --button-bg: #e0e0e0;
-  --button-shadow: #cccccc;
-  --primary-color: #0077ff;
-}
+    /* Light mode variables */
+    .light-mode {
+      --bg-gradient: radial-gradient(circle, #ffffff, #f3f3f3);
+      --text-color: #000000;
+      --button-bg: #e0e0e0;
+      --button-shadow: #cccccc;
+      --primary-color: #0077ff;
+    }
 
-/* Main content styles */
-.content {
-  width: 90%;
-  margin-top:30px;
-  max-width: 800px;
-  text-align: center;
-  margin: clamp(20px, 5vh, 40px) auto;
-  padding: clamp(15px, 3vw, 30px);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  color: var(--text-color);
-  font-family: 'Audiowide', sans-serif;
-  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-}
+    /* Main content styles */
+    .content {
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+      margin: clamp(20px, 5vh, 40px) auto;
+      padding: clamp(15px, 3vw, 30px);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      color: var(--text-color);
+      font-family: 'Audiowide', sans-serif;
+      transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    }
 
-.content h1 {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  margin-bottom: clamp(10px, 2vw, 20px);
-  font-family: 'Orbitron', sans-serif;
-  text-transform: uppercase;
-}
+    .content h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: clamp(10px, 2vw, 20px);
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+    }
 
-.content p {
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
-  font-weight: 300;
-  line-height: 1.6;
-}
+    .content p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 300;
+      line-height: 1.6;
+    }
 
-/* Siri-like animation styles */
-.siri-animation {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  pointer-events: none;
-  overflow: hidden;
-  perspective: 1000px;
-}
+    /* Siri-like animation styles */
+    .siri-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      pointer-events: none;
+      overflow: hidden;
+      perspective: 1000px;
+    }
 
-.wave {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  filter: blur(40px);
-  transform-style: preserve-3d;
-}
+    .wave {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      filter: blur(40px);
+      transform-style: preserve-3d;
+    }
 
-/* Edge lighting styles for bolder and more vivid rainbow effect */
-.edge-light {
-  position: fixed;
-  opacity: 0;
-  z-index: 1001;
-  filter: blur(5px); /* Reduced blur for sharper edges */
-  background: linear-gradient(45deg, 
-    #ff3f34, /* Red */
-    #ff9d00, /* Orange */
-    #f3e200, /* Yellow */
-    #00d6b6, /* Turquoise */
-    #0099ff, /* Blue */
-    #9a00ff, /* Purple */
-    #ff3f34 /* Back to Red */
-  );
-  background-size: 200% 200%; /* Smaller background size for a more defined movement */
-  animation: rainbowPulse 3s ease-in-out infinite, edgeGlow 1s ease-in-out infinite; /* Multiple animations for pulsing */
-}
+    /* Edge lighting styles */
+    .edge-light {
+      position: fixed;
+      opacity: 0;
+      z-index: 1001;
+      filter: blur(5px);
+      background: linear-gradient(45deg, 
+        #ff3f34, #ff9d00, #f3e200, #00d6b6, #0099ff, #9a00ff, #ff3f34
+      );
+      background-size: 200% 200%;
+      animation: rainbowPulse 3s ease-in-out infinite, edgeGlow 1s ease-in-out infinite;
+    }
 
-/* Keyframe for smooth rainbow animation */
-@keyframes rainbowPulse {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+    @keyframes rainbowPulse {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-/* Keyframe for the pulsing glow effect */
-@keyframes edgeGlow {
-  0% {
-    filter: blur(5px) brightness(1);
-  }
-  50% {
-    filter: blur(10px) brightness(2); /* Stronger glow */
-  }
-  100% {
-    filter: blur(5px) brightness(1);
-  }
-}
+    @keyframes edgeGlow {
+      0% { filter: blur(5px) brightness(1); }
+      50% { filter: blur(10px) brightness(2); }
+      100% { filter: blur(5px) brightness(1); }
+    }
 
-/* Edge light positions */
-.edge-light-top, .edge-light-bottom {
-  left: 0;
-  right: 0;
-  height: 12px; /* Increased thickness */
-}
+    .edge-light-top, .edge-light-bottom {
+      left: 0;
+      right: 0;
+      height: 12px;
+    }
 
-.edge-light-left, .edge-light-right {
-  top: 0;
-  bottom: 0;
-  width: 12px; /* Increased thickness */
-}
+    .edge-light-left, .edge-light-right {
+      top: 0;
+      bottom: 0;
+      width: 12px;
+    }
 
-.edge-light-top {
-  top: 0;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
+    .edge-light-top {
+      top: 0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
 
-.edge-light-bottom {
-  bottom: 0;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
+    .edge-light-bottom {
+      bottom: 0;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
 
-.edge-light-left {
-  left: 0;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
+    .edge-light-left {
+      left: 0;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }
 
-.edge-light-right {
-  right: 0;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-/* Edge lighting styles for bolder and more vivid rainbow effect */
-.edge-light {
-  position: fixed;
-  opacity: 0;
-  z-index: 1001;
-  filter: blur(5px); /* Reduced blur for sharper edges */
-  background: linear-gradient(45deg, 
-    #ff3f34, /* Red */
-    #ff9d00, /* Orange */
-    #f3e200, /* Yellow */
-    #00d6b6, /* Turquoise */
-    #0099ff, /* Blue */
-    #9a00ff, /* Purple */
-    #ff3f34 /* Back to Red */
-  );
-  background-size: 200% 200%; /* Smaller background size for a more defined movement */
-  animation: rainbowPulse 3s ease-in-out infinite, edgeGlow 1s ease-in-out infinite; /* Multiple animations for pulsing */
-}
+    .edge-light-right {
+      right: 0;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
 
-/* Keyframe for smooth rainbow animation */
-@keyframes rainbowPulse {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+    /* Settings panel styles */
+    .settings-panel {
+      position: absolute;
+      bottom: 20px;
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      color: var(--text-color);
+      font-family: 'Audiowide', sans-serif;
+      transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    }
 
-/* Keyframe for the pulsing glow effect */
-@keyframes edgeGlow {
-  0% {
-    filter: blur(5px) brightness(1);
-  }
-  50% {
-    filter: blur(10px) brightness(2); /* Stronger glow */
-  }
-  100% {
-    filter: blur(5px) brightness(1);
-  }
-}
+    .settings-panel h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-/* Edge light positions */
-.edge-light-top, .edge-light-bottom {
-  left: 0;
-  right: 0;
-  height: 12px; /* Increased thickness */
-}
+    .settings-option {
+      margin: 10px 0;
+    }
 
-.edge-light-left, .edge-light-right {
-  top: 0;
-  bottom: 0;
-  width: 12px; /* Increased thickness */
-}
+    .settings-option button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--button-bg);
+      color: var(--text-color);
+      outline: none;
+      box-shadow: 3px 3px 8px var(--button-shadow), -3px -3px 8px rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+    }
 
-.edge-light-top {
-  top: 0;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
+    .settings-option button:hover {
+      background: linear-gradient(45deg, #0077ff, #ff0077);
+      color: #fff;
+      transform: translateY(-2px);
+    }
 
-.edge-light-bottom {
-  bottom: 0;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
+    .settings-option button:active {
+      transform: translateY(2px);
+    }
 
-.edge-light-left {
-  left: 0;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
+    /* Dynamic Island Styles */
+    #dynamicIsland {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-radius: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      min-height: 80px;
+      width: 320px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease-in-out;
+      z-index: 1000;
+    }
 
-.edge-light-right {
-  right: 0;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
+    /* Collapsed Content Styles */
+    #collapsedContent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 12px 22px;
+    }
 
-/* Settings panel styles */
-.settings-panel {
-  position: absolute;
-  bottom: 20px;
-  width: 90%;
-  max-width: 400px;
-  padding: 20px;
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  color: var(--text-color);
-  font-family: 'Audiowide', sans-serif;
-  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-}
+    #collapsedContent img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
 
-.settings-panel h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
+    #collapsedContent span {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
 
-.settings-option {
-  margin: 10px 0;
-}
+    /* Expanded Content Styles */
+    #expandedContent {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding: 25px;
+    }
 
-.settings-option button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  background: var(--button-bg);
-  color: var(--text-color);
-  outline: none;
-  box-shadow: 3px 3px 8px var(--button-shadow), -3px -3px 8px rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
-}
+    .module {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.4s ease;
+    }
 
-.settings-option button:hover {
-  background: linear-gradient(45deg, #0077ff, #ff0077);
-  color: #fff;
-  transform: translateY(-2px);
-}
+    .module:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
 
-.settings-option button:active {
-  transform: translateY(2px);
-}
+    .module-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff512f, #dd2476);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 1.6rem;
+    }
 
-/* Dynamic Island Styles */
-#dynamicIsland {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  border-radius: 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  min-height: 80px;
-  width: 320px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.4s ease-in-out;
-  z-index:1000;
-}
+    .module-details {
+      display: flex;
+      flex-direction: column;
+    }
 
-/* Collapsed Content Styles */
-#collapsedContent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 12px 22px;
-}
+    .module-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
 
-#collapsedContent img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-}
+    .module-subtitle {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
 
-#collapsedContent span {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-}
+    .expanded-content {
+      color: #ffffff;
+    }
 
-/* Expanded Content Styles */
-#expandedContent {
-  display: none;
-  flex-direction: column;
-  gap: 12px;
-  padding: 25px;
-}
-
-.module {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 15px;
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.4s ease;
-}
-
-.module:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.02);
-}
-
-.module-icon {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #ff512f, #dd2476);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  font-size: 1.6rem;
-}
-
-.module-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.module-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color:#ffffff;
-}
-
-.module-subtitle {
-  font-size: 0.9rem;
-  color: #ccc;
-}
-
-  .expanded-content{
-    color:#ffffff;
-  }
     .ripple {
       position: absolute;
       width: 100px;
@@ -422,23 +320,153 @@ body {
       animation: rippleEffect 1s ease-out;
       pointer-events: none;
     }
+
     @keyframes rippleEffect {
       to {
         transform: scale(4);
         opacity: 0;
       }
     }
-#blueDropButton:hover {
-    background: linear-gradient(45deg, #0077ff, #ff0077);
-    color: #fff;
-    transform: translateY(-2px);
-}
-  
-  #blueDropButton{
-  transform: translateY(2px);
-  }
-  </style>
 
+    #blueDropButton {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--button-bg);
+      color: var(--text-color);
+      outline: none;
+      box-shadow: 3px 3px 8px var(--button-shadow), -3px -3px 8px rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+    }
+
+    #blueDropButton:hover {
+      background: linear-gradient(45deg, #0077ff, #ff0077);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    #blueDropButton:active {
+      transform: translateY(2px);
+    }
+
+    /* BlueDrop Animation Styles */
+    #blueDropAnimation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .bluedrop-container {
+      
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      height: 320px;
+      background: #ffffff;
+      border-radius: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    #fluidCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      
+    }
+  
+  .fluid {
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      background: linear-gradient(135deg, 
+        rgba(0, 122, 255, 0.8),
+        rgba(88, 86, 214, 0.8),
+        rgba(255, 45, 85, 0.8)
+      );
+      border-radius: 30px;
+      filter: blur(20px);
+      opacity: 0.8;
+      transform: scale(0.8) translateY(20%);
+    }
+
+    .fluid::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAKQ2lDQ1BJQ0MgcHJvZmlsZQAAeNqdU3dYk/cWPt/3ZQ9WQtjwsZdsgQAiI6wIyBBZohCSAGGEEBJAxYWIClYUFRGcSFXEgtUKSJ2I4qAouGdBiohai1VcOO4f3Ke1fXrv7e371/u855zn/M55zw+AERImkeaiagA5UoU8Otgfj09IxMm9gAIVSOAEIBDmy8JnBcUAAPADeXh+dLA//AGvbwACAHDVLiQSx+H/g7pQJlcAIJEA4CIS5wsBkFIAyC5UyBQAyBgAsFOzZAoAlAAAbHl8QiIAqg0A7PRJPgUA2KmT3BcA2KIcqQgAjQEAmShHJAJAuwBgVYFSLALAwgCgrEAiLgTArgGAWbYyRwKAvQUAdo5YkA9AYACAmUIszAAgOAIAQx4TzQMgTAOgMNK/4KlfcIW4SAEAwMuVzZdL0jMUuJXQGnfy8ODiIeLCbLFCYRcpEGYJ5CKcl5sjE0jnA0zODAAAGvnRwf44P5Dn5uTh5mbnbO/0xaL+a/BvIj4h8d/+vIwCBAAQTs/v2l/l5dYDcMcBsHW/a6lbANpWAGjf+V0z2wmgWgrQevmLeTj8QB6eoVDIPB0cCgsL7SViob0w44s+/zPhb+CLfvb8QB7+23rwAHGaQJmtwKOD/XFhbnauUo7nywRCMW735yP+x4V//Y4p0eI0sVwsFYrxWIm4UCJNx3m5UpFEIcmV4hLpfzLxH5b9CZN3DQCshk/ATrYHtctswH7uAQKLDljSdgBAfvMtjBoLkQAQZzQyefcAAJO/+Y9AKwEAzZek4wAAvOgYXKiUF0zGCAAARKCBKrBBBwzBFKzADpzBHbzAFwJhBkRADCTAPBBCBuSAHAqhGJZBGVTAOtgEtbADGqARmuEQtMExOA3n4BJcgetwFwZgGJ7CGLyGCQRByAgTYSE6iBFijtgizggXmY4EImFINJKApCDpiBRRIsXIcqQCqUJqkV1II/ItchQ5jVxA+pDbyCAyivyKvEcxlIGyUQPUAnVAuagfGorGoHPRdDQPXYCWomvRGrQePYC2oqfRS+h1dAB9io5jgNExDmaM2WFcjIdFYIlYGibHFmPlWDVWjzVjHVg3dhUbwJ5h7wgkAouAE+wIXoQQwmyCkJBHWExYQ6gl7CO0EroIVwmDhDHCJyKTqE+0JXoS+cR4YjqxkFhGrCbuIR4hniVeJw4TX5NIJA7JkuROCiElkDJJC0lrSNtILaRTpD7SEGmcTCbrkG3J3uQIsoCsIJeRt5APkE+S+8nD5LcUOsWI4kwJoiRSpJQSSjVlP+UEpZ8yQpmgqlHNqZ7UCKqIOp9aSW2gdlAvU4epEzR1miXNmxZDy6Qto9XQmmlnafdoL+l0ugndgx5Fl9CX0mvoB+nn6YP0dwwNhg2Dx0hiKBlrGXsZpxi3GS+ZTKYF05eZyFQw1zIbmWeYD5hvVVgq9ip8FZHKEpU6lVaVfpXnqlRVc1U/1XmqC1SrVQ+rXlZ9pkZVs1DjqQnUFqvVqR1Vu6k2rs5Sd1KPUM9RX6O+X/2C+mMNsoaFRqCGSKNUY7fGGY0hFsYyZfFYQtZyVgPrLGuYTWJbsvnsTHYF+xt2L3tMU0NzqmasZpFmneZxzQEOxrHg8DnZnErOIc4NznstAy0/LbHWaq1mrX6tN9p62r7aYu1y7Rbt69rvdXCdQJ0snfU6bTr3dQm6NrpRuoW623XP6j7TY+t56Qn1yvUO6d3RR/Vt9KP1F+rv1u/RHzcwNAg2kBlsMThj8MyQY+hrmGm40fCE4agRy2i6kcRoo9FJoye4Ju6HZ+M1eBc+ZqxvHGKsNN5l3Gs8YWJpMtukxKTF5L4pzZRrmma60bTTdMzMyCzcrNisyeyOOdWca55hvtm82/yNhaVFnMVKizaLx5balnzLBZZNlvesmFY+VnlW9VbXrEnWXOss623WV2xQG1ebDJs6m8u2qK2brcR2m23fFOIUjynSKfVTbtox7PzsCuya7AbtOfZh9iX2bfbPHcwcEh3WO3Q7fHJ0dcx2bHC866ThNMOpxKnD6VdnG2ehc53zNRemS5DLEpd2lxdTbaeKp26fesuV5RruutK10/Wjm7ub3K3ZbdTdzD3Ffav7TS6bG8ldwz3vQfTw91jicczjnaebp8LzkOcvXnZeWV77vR5Ps5wmntYwbcjbxFvgvct7YDo+PWX6zukDPsY+Ap96n4e+pr4i3z2+I37Wfpl+B/ye+zv6y/2P+L/hefIW8U4FYAHBAeUBvYEagbMDawMfBJkEpQc1BY0FuwYvDD4VQgwJDVkfcpNvwBfyG/ljM9xnLJrRFcoInRVaG/owzCZMHtYRjobPCN8Qfm+m+UzpzLYIiOBHbIi4H2kZmRf5fRQpKjKqLupRtFN0cXT3LNas5Fn7Z72O8Y+pjLk722q2cnZnrGpsUmxj7Ju4gLiquIF4h/hF8ZcSdBMkCe2J5MTYxD2J43MC52yaM5zkmlSWdGOu5dyiuRfm6c7Lnnc8WTVZkHw4hZgSl7I/5YMgQlAvGE/lp25NHRPyhJuFT0W+oo2iUbG3uEo8kuadVpX2ON07fUP6aIZPRnXGMwlPUit5kRmSuSPzTVZE1t6sz9lx2S05lJyUnKNSDWmWtCvXMLcot09mKyuTDeR55m3KG5OHyvfkI/lz89sVbIVM0aO0Uq5QDhZML6greFsYW3i4SL1IWtQz32b+6vkjC4IWfL2QsFC4sLPYuHhZ8eAiv0W7FiOLUxd3LjFdUrpkeGnw0n3LaMuylv1Q4lhSVfJqedzyjlKD0qWlQyuCVzSVqZTJy26u9Fq5YxVhlWRV72qX1VtWfyoXlV+scKyorviwRrjm4ldOX9V89Xlt2treSrfK7etI66Trbqz3Wb+vSr1qQdXQhvANrRvxjeUbX21K3nShemr1js20zcrNAzVhNe1bzLas2/KhNqP2ep1/XctW/a2rt77ZJtrWv913e/MOgx0VO97vlOy8tSt4V2u9RX31btLugt2PGmIbur/mft24R3dPxZ6Pe6V7B/ZF7+tqdG9s3K+/v7IJbVI2jR5IOnDlm4Bv2pvtmne1cFoqDsJB5cEn36Z8e+NQ6KHOw9zDzd+Zf7f1COtIeSvSOr91rC2jbaA9ob3v6IyjnR1eHUe+t/9+7zHjY3XHNY9XnqCdKD3x+eSCk+OnZKeenU4/PdSZ3Hn3TPyZa11RXb1nQ8+ePxd07ky3X/fJ897nj13wvHD0Ivdi2yW3S609rj1HfnD94UivW2/rZffL7Vc8rnT0Tes70e/Tf/pqwNVz1/jXLl2feb3vxuwbt24m3Ry4Jbr1+Hb27Rd3Cu5M3F16j3iv/L7a/eoH+g/qf7T+sWXAbeD4YMBgz8NZD+8OCYee/pT/04fh0kfMR9UjRiONj50fHxsNGr3yZM6T4aeypxPPyn5W/3nrc6vn3/3i+0vPWPzY8Av5i8+/rnmp83Lvq6mvOscjxx+8znk98ab8rc7bfe+477rfx70fmSj8QP5Q89H6Y8en0E/3Pud8/vwv94Tz+4A5JREAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADKGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDphZmZkOWYzZC1hNzQ1LTRlNzQtYWQwZC0zNzg4NDJjZmFiMTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTFCNTY0N0Y5RUJGMTFFQTlDMTNERTM0MkZBRTY5NjgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTFCNTY0N0U5RUJGMTFFQTlDMTNERTM0MkZBRTY5NjgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6YWZmZDlmM2QtYTc0NS00ZTc0LWFkMGQtMzc4ODQyY2ZhYjExIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOmFmZmQ5ZjNkLWE3NDUtNGU3NC1hZDBkLTM3ODg0MmNmYWIxMSIvPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
+      background-blend-mode: overlay;
+      mix-blend-mode: overlay;
+    }
+
+    .bluedrop-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .bluedrop-message {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .bluedrop-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: linear-gradient(45deg, #0077ff, #ff0077);
+      border: none;
+      border-radius: 30px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .bluedrop-button:hover {
+      transform: scale(1.05);
+    }
+
+    .bluedrop-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+  </style>
 </head>
 <body>
   <!-- Main Content -->
@@ -446,21 +474,7 @@ body {
     <h1>BlueDrop, Dynamic Island With IOS Animation</h1>
     <p>Experience the next-level interactive animation!</p>
     <!-- BlueDrop Button -->
-<button id="blueDropButton" style="width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  background: var(--button-bg);
-  color: var(--text-color);
-  outline: none;
-  box-shadow: 3px 3px 8px var(--button-shadow), -3px -3px 8px rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
-">BlueDrop</button>
+    <button id="blueDropButton">BlueDrop</button>
   </div>
 
   <!-- Siri-like Animation -->
@@ -470,7 +484,7 @@ body {
   <div class="edge-light edge-light-left" id="edgeLightLeft"></div>
   <div class="edge-light edge-light-right" id="edgeLightRight"></div>
 
- <div id="dynamicIsland">
+  <div id="dynamicIsland">
     <!-- Collapsed Content -->
     <div id="collapsedContent">
       <img id="latestIcon" src="https://via.placeholder.com/50" alt="Notification Icon">
@@ -537,317 +551,482 @@ body {
       <button onclick="triggerSiriAnimation()">Test Animation</button>
     </div>
   </div>
-  
-  
-  
-<script>
-  /* Global variables */
-  const siriAnimation = document.getElementById('siriAnimation');
-  const edgeLights = [
-    document.getElementById('edgeLightTop'),
-    document.getElementById('edgeLightBottom'),
-    document.getElementById('edgeLightLeft'),
-    document.getElementById('edgeLightRight')
-  ];
-  const mainContent = document.getElementById('mainContent');
-  const settingsPanel = document.getElementById('settingsPanel');
-  const themeToggle = document.getElementById('themeToggle');
-  const notificationPermission = document.getElementById('notificationPermission');
-  const accessibilityCheck = document.getElementById('accessibilityCheck');
-  let isLightMode = false;
-  let isAnimating = false;
 
-  /* Dynamic Island functionality */
-  const dynamicIsland = document.getElementById('dynamicIsland');
-  const collapsedContent = document.getElementById('collapsedContent');
-  const expandedContent = document.getElementById('expandedContent');
+  <!-- BlueDrop Animation -->
+  <div id="blueDropAnimation">
+    <div class="bluedrop-container">
+      <canvas id="fluidCanvas"></canvas>
+      <div class="fluid" id="fluidBackground"></div>
+      <div class="bluedrop-content">
+        <div class="bluedrop-message" id="blueDropMessage">Tap to start BlueDrop</div>
+        <button class="bluedrop-button" id="blueDropActionButton">Start</button>
+      </div>
+    </div>
+    <button class="bluedrop-close" id="blueDropClose">&times;</button>
+  </div>
 
-  // Update the latest notification
-  let latestNotification = { app: "Music", icon: "🎵", text: "Now Playing: Shape of You" };
-  function updateLatestNotification(notification) {
-    latestNotification = notification;
-    latestIcon.src = `https://via.placeholder.com/50?text=${notification.icon}`;
-    latestText.textContent = notification.text;
-  }
-  updateLatestNotification(latestNotification);
-
-  // Expand/Collapse the Dynamic Island
-  collapsedContent.addEventListener('click', () => {
-    gsap.to(dynamicIsland, { height: "auto", width: 350, duration: 0.5, ease: "power2.out" });
-    collapsedContent.style.display = "none";
-    expandedContent.style.display = "flex";
-  });
-
-  document.body.addEventListener('click', (e) => {
-    if (!dynamicIsland.contains(e.target)) {
-      gsap.to(dynamicIsland, { height: 70, width: 300, duration: 0.5, ease: "power2.in" });
-      collapsedContent.style.display = "flex";
-      expandedContent.style.display = "none";
-    }
-  });
-
-  /* Siri-like animation functionality */
-  function createFluidWave(color, index) {
-    const wave = document.createElement('div');
-    wave.className = 'wave';
-    siriAnimation.appendChild(wave);
-
-    const size = Math.random() * 100 + 200;
-    const startX = Math.random() * window.innerWidth;
-    const startY = Math.random() * window.innerHeight;
-    const startZ = Math.random() * 100 - 50;
-
-    gsap.set(wave, {
-      width: size,
-      height: size,
-      x: startX,
-      y: startY,
-      z: startZ,
-      background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
-      opacity: 0,
-    });
-
-    return wave;
-  }
-
-  function animateFluidWave(wave, index) {
-    const duration = 3 + Math.random();
-    const delay = index * 0.1;
-
-    const timeline = gsap.timeline();
-
-    timeline.to(wave, {
-      opacity: 0.8,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    }, delay);
-
-    timeline.to(wave, {
-      motionPath: {
-        path: [
-          {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
-          {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
-          {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
-        ],
-        curviness: 2,
-      },
-      scale: 1.5,
-      rotationX: Math.random() * 360,
-      rotationY: Math.random() * 360,
-      duration: duration,
-      ease: 'none',
-    }, delay);
-
-    timeline.to(wave, {
-      opacity: 0,
-      scale: 2,
-      duration: 0.5,
-      ease: 'power2.in',
-      onComplete: () => {
-        wave.remove();
-      },
-    }, `>-0.5`);
-
-    return timeline;
-  }
-
-  function triggerHapticFeedback() {
-    if ('vibrate' in navigator) {
-      navigator.vibrate([15, 30, 15]);
-    }
-  }
-
-  function triggerSiriAnimation() {
-    if (isAnimating) return;
-    isAnimating = true;
-
-    triggerHapticFeedback();
-
-    siriAnimation.innerHTML = '';
-    siriAnimation.style.display = 'block';
-
-    gsap.to([mainContent, settingsPanel], {
-      scale: 0.95,
-      filter: 'blur(5px)',
-      duration: 0.3,
-      ease: 'power2.inOut',
-    });
-
-    const colors = [
-      getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
-      '#ff0077',
-      '#00ff99',
-      '#ffcc00'
+  <script>
+    /* Global variables */
+    const siriAnimation = document.getElementById('siriAnimation');
+    const edgeLights = [
+      document.getElementById('edgeLightTop'),
+      document.getElementById('edgeLightBottom'),
+      document.getElementById('edgeLightLeft'),
+      document.getElementById('edgeLightRight')
     ];
-    const totalWaves = 20;
+    const mainContent = document.getElementById('mainContent');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const themeToggle = document.getElementById('themeToggle');
+    const notificationPermission = document.getElementById('notificationPermission');
+    const accessibilityCheck = document.getElementById('accessibilityCheck');
+    let isLightMode = false;
+    let isAnimating = false;
 
-    for (let i = 0; i < totalWaves; i++) {
-      const wave = createFluidWave(colors[i % colors.length], i);
-      animateFluidWave(wave, i);
+    /* Dynamic Island functionality */
+    const dynamicIsland = document.getElementById('dynamicIsland');
+    const collapsedContent = document.getElementById('collapsedContent');
+    const expandedContent = document.getElementById('expandedContent');
+
+    // Update the latest notification
+    let latestNotification = { app: "Music", icon: "🎵", text: "Now Playing: Shape of You" };
+    function updateLatestNotification(notification) {
+      latestNotification = notification;
+      document.getElementById('latestIcon').src = `https://via.placeholder.com/50?text=${notification.icon}`;
+      document.getElementById('latestText').textContent = notification.text;
     }
+    updateLatestNotification(latestNotification);
 
-    // Animate edge lights
-    gsap.to(edgeLights, {
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.inOut',
-      stagger: 0.1,
-      yoyo: true,
-      repeat: 1,
-      onComplete: () => {
-        gsap.to(edgeLights, {
-          opacity: 0,
-          duration: 0.5,
-          ease: 'power2.inOut',
-        });
-      },
+    // Expand/Collapse the Dynamic Island
+    collapsedContent.addEventListener('click', () => {
+      gsap.to(dynamicIsland, { height: "auto", width: 350, duration: 0.5, ease: "power2.out" });
+      collapsedContent.style.display = "none";
+      expandedContent.style.display = "flex";
     });
 
-    gsap.to([mainContent, settingsPanel], {
-      scale: 1,
-      filter: 'blur(0px)',
-      duration: 0.3,
-      delay: 3,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        siriAnimation.style.display = 'none';
-        isAnimating = false;
-      },
-    });
-  }
-
-  themeToggle.addEventListener('click', () => {
-    isLightMode = !isLightMode;
-    document.body.classList.toggle('light-mode', isLightMode);
-    themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
-  });
-
-  notificationPermission.addEventListener('click', () => {
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification('Notifications Enabled!', {
-            body: 'You can now receive notifications.',
-          });
-        } else {
-          alert('Notification permission denied.');
-        }
-      });
-    } else {
-      alert('Notifications are not supported in this browser.');
-    }
-  });
-
-  accessibilityCheck.addEventListener('click', () => {
-    alert(
-      'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
-    );
-  });
-
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-  document.body.classList.toggle('light-mode', !prefersDark.matches);
-
-  siriAnimation.addEventListener('pointermove', (event) => {
-    const { clientX, clientY } = event;
-    const { left, top, width, height } = siriAnimation.getBoundingClientRect();
-    const x = (clientX - left) / width - 0.5;
-    const y = (clientY - top) / height - 0.5;
-
-    gsap.to('.wave', {
-      x: `+=${x * 50}`,
-      y: `+=${y * 50}`,
-      duration: 1,
-      ease: 'power2.out',
-    });
-  });
-
-  function simulateNotification() {
-    triggerSiriAnimation();
-    new Notification('New Message', {
-      body: 'You have received a new message.',
-    });
-  }
-
-  setInterval(simulateNotification, 30000);
-
-  /* Swipe-to-dismiss functionality for Dynamic Island Modules */
-  const modules = document.querySelectorAll('.module');
-  
-  modules.forEach((module) => {
-    const hammer = new Hammer(module);
-
-    // Enable swipe-to-dismiss feature
-    hammer.on('swipe', (e) => {
-      gsap.to(module, {
-        x: e.deltaX > 0 ? 500 : -500,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power3.out",
-        onComplete: () => module.remove(),
-      });
-    });
-
-    // Long press to trigger an alert for module-specific actions
-    hammer.on('press', () => {
-      alert(`Opening ${module.dataset.app}`);
-    });
-
-    // Double-click to expand the module
-    let clickCount = 0;
-    module.addEventListener('click', () => {
-      clickCount++;
-      setTimeout(() => (clickCount = 0), 400);
-      if (clickCount === 2) {
-        module.classList.toggle('expanded');
+    document.body.addEventListener('click', (e) => {
+      if (!dynamicIsland.contains(e.target)) {
+        gsap.to(dynamicIsland, { height: 70, width: 300, duration: 0.5, ease: "power2.in" });
+        collapsedContent.style.display = "flex";
+        expandedContent.style.display = "none";
       }
     });
-  });
-  
-  
-  
-</script>
-<script>
-  // Get the BlueDrop button and main content container
-  const blueDropButton = document.getElementById('blueDropButton');
-  const mainContent = document.getElementById('mainContent'); // Assuming the content div ID is 'mainContent'
 
-  // Airdrop animation content as a separate HTML string
-  const airdropAnimation = `
-    <div class="widget-container" id="widgetContainer">
-      <div class="fluid" id="fluidBackground"></div>
-      <div class="content">
-        <div class="message" id="message">Tap to start BlueDrop</div>
-      </div>
-      <div class="success-message" id="successMessage">Transfer Complete!</div>
-      <div class="error-message" id="errorMessage">Transfer Failed</div>
-      <div class="loading-message" id="loadingMessage">Transferring...</div>
-      <button class="retry-button" id="retryButton">Retry</button>
-    </div>
-  `;
+    /* Siri-like animation functionality */
+    function createFluidWave(color, index) {
+      const wave = document.createElement('div');
+      wave.className = 'wave';
+      siriAnimation.appendChild(wave);
 
-  // Load the animation HTML when button is clicked
-  blueDropButton.addEventListener('click', () => {
-    // Inject animation into the main content
-    mainContent.innerHTML = airdropAnimation;
+      const size = Math.random() * 100 + 200;
+      const startX = Math.random() * window.innerWidth;
+      const startY = Math.random() * window.innerHeight;
+      const startZ = Math.random() * 100 - 50;
 
-    // Re-initialize animations or scripts (referencing your provided script)
-    const fluidBackground = document.getElementById('fluidBackground');
-    const message = document.getElementById('message');
-    const retryButton = document.getElementById('retryButton');
+      gsap.set(wave, {
+        width: size,
+        height: size,
+        x: startX,
+        y: startY,
+        z: startZ,
+        background: `radial-gradient(circle, ${color}66 0%, ${color}00 70%)`,
+        opacity: 0,
+      });
 
-    function startTransfer() {
-      // Initialize transfer logic...
-      console.log("BlueDrop transfer animation started");
+      return wave;
     }
 
-    fluidBackground.addEventListener('click', startTransfer);
-    retryButton.addEventListener('click', () => {
-      console.log("Retry logic triggered");
-    });
-  });
-  
-  
-</script>
+    function animateFluidWave(wave, index) {
+      const duration = 3 + Math.random();
+      const delay = index * 0.1;
 
+      const timeline = gsap.timeline();
+
+      timeline.to(wave, {
+        opacity: 0.8,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      }, delay);
+
+      timeline.to(wave, {
+        motionPath: {
+          path: [
+            {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+            {x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, z: Math.random() * 100 - 50},
+            {x: Math.random() * 100 - 50, y: Math.random() * 100 - 50, z: Math.random() * 50 - 25},
+          ],
+          curviness: 2,
+        },
+        scale: 1.5,
+        rotationX: Math.random() * 360,
+        rotationY: Math.random() * 360,
+        duration: duration,
+        ease: 'none',
+      }, delay);
+
+      timeline.to(wave, {
+        opacity: 0,
+        scale: 2,
+        duration: 0.5,
+        ease: 'power2.in',
+        onComplete: () => {
+          wave.remove();
+        },
+      }, `>-0.5`);
+
+      return timeline;
+    }
+
+    function triggerHapticFeedback() {
+      if ('vibrate' in navigator) {
+        navigator.vibrate([15, 30, 15]);
+      }
+    }
+
+    function triggerSiriAnimation() {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      triggerHapticFeedback();
+
+      siriAnimation.innerHTML = '';
+      siriAnimation.style.display = 'block';
+
+      gsap.to([mainContent, settingsPanel], {
+        scale: 0.95,
+        filter: 'blur(5px)',
+        duration: 0.3,
+        ease: 'power2.inOut',
+      });
+
+      const colors = [
+        getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
+        '#ff0077',
+        '#00ff99',
+        '#ffcc00'
+      ];
+      const totalWaves = 20;
+
+      for (let i = 0; i < totalWaves; i++) {
+        const wave = createFluidWave(colors[i % colors.length], i);
+        animateFluidWave(wave, i);
+      }
+
+      // Animate edge lights
+      gsap.to(edgeLights, {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+        stagger: 0.1,
+        yoyo: true,
+        repeat: 1,
+        onComplete: () => {
+          gsap.to(edgeLights, {
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.inOut',
+          });
+        },
+      });
+
+      gsap.to([mainContent, settingsPanel], {
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 0.3,
+        delay: 3,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          siriAnimation.style.display = 'none';
+          isAnimating = false;
+        },
+      });
+    }
+
+    themeToggle.addEventListener('click', () => {
+      isLightMode = !isLightMode;
+      document.body.classList.toggle('light-mode', isLightMode);
+      themeToggle.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
+    });
+
+    notificationPermission.addEventListener('click', () => {
+      if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification('Notifications Enabled!', {
+              body: 'You can now receive notifications.',
+            });
+          } else {
+            alert('Notification permission denied.');
+          }
+        });
+      } else {
+        alert('Notifications are not supported in this browser.');
+      }
+    });
+
+    accessibilityCheck.addEventListener('click', () => {
+      alert(
+        'To enable accessibility, navigate to your device settings and grant accessibility permissions for this app.'
+      );
+    });
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    document.body.classList.toggle('light-mode', !prefersDark.matches);
+
+    siriAnimation.addEventListener('pointermove', (event) => {
+      const { clientX, clientY } = event;
+      const { left, top, width, height } = siriAnimation.getBoundingClientRect();
+      const x = (clientX - left) / width - 0.5;
+      const y = (clientY - top) / height - 0.5;
+
+      gsap.to('.wave', {
+        x: `+=${x * 50}`,
+        y: `+=${y * 50}`,
+        duration: 1,
+        ease: 'power2.out',
+      });
+    });
+
+    function simulateNotification() {
+      triggerSiriAnimation();
+      new Notification('New Message', {
+        body: 'You have received a new message.',
+      });
+    }
+
+    setInterval(simulateNotification, 30000);
+
+    /* Swipe-to-dismiss functionality for Dynamic Island Modules */
+    const modules = document.querySelectorAll('.module');
+    
+    modules.forEach((module) => {
+      const hammer = new Hammer(module);
+
+      // Enable swipe-to-dismiss feature
+      hammer.on('swipe', (e) => {
+        gsap.to(module, {
+          x: e.deltaX > 0 ? 500 : -500,
+          opacity: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          onComplete: () => module.remove(),
+        });
+      });
+
+      // Long press to trigger an alert for module-specific actions
+      hammer.on('press', () => {
+        alert(`Opening ${module.dataset.app}`);
+      });
+
+      // Double-click to expand the module
+      let clickCount = 0;
+      module.addEventListener('click', () => {
+        clickCount++;
+        setTimeout(() => (clickCount = 0), 400);
+        if (clickCount === 2) {
+          module.classList.toggle('expanded');
+        }
+      });
+    });
+
+    /* BlueDrop Animation */
+    const blueDropButton = document.getElementById('blueDropButton');
+    const blueDropAnimation = document.getElementById('blueDropAnimation');
+    const blueDropClose = document.getElementById('blueDropClose');
+    const blueDropMessage = document.getElementById('blueDropMessage');
+    const blueDropActionButton = document.getElementById('blueDropActionButton');
+    const fluidCanvas = document.getElementById('fluidCanvas');
+    const ctx = fluidCanvas.getContext('2d');
+
+    let animationFrameId;
+    let particles = [];
+
+    function resizeCanvas() {
+      fluidCanvas.width = fluidCanvas.offsetWidth;
+      fluidCanvas.height = fluidCanvas.offsetHeight;
+      initParticles();
+    }
+
+    function initParticles() {
+      particles = [];
+      const particleCount = 100;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * fluidCanvas.width,
+          y: Math.random() * fluidCanvas.height,
+          radius: Math.random() * 3 + 1,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          vx: Math.random() * 2 - 1,
+          vy: Math.random() * 2 - 1
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, fluidCanvas.width, fluidCanvas.height);
+      particles.forEach(particle => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        if (particle.x < 0 || particle.x > fluidCanvas.width) particle.vx *= -1;
+        if (particle.y < 0 || particle.y > fluidCanvas.height) particle.vy *= -1;
+      });
+      animationFrameId = requestAnimationFrame(drawParticles);
+    }
+
+    function startBlueDrop() {
+      blueDropAnimation.style.display = 'flex';
+      resizeCanvas();
+      drawParticles();
+    }
+
+    function stopBlueDrop() {
+      blueDropAnimation.style.display = 'none';
+      cancelAnimationFrame(animationFrameId);
+    }
+
+    blueDropButton.addEventListener('click', startBlueDrop);
+    blueDropClose.addEventListener('click', stopBlueDrop);
+
+    blueDropActionButton.addEventListener('click', () => {
+      if (blueDropActionButton.textContent === 'Start') {
+        blueDropMessage.textContent = 'Transferring...';
+        blueDropActionButton.textContent = 'Cancel';
+        
+        // Simulate transfer process
+        setTimeout(() => {
+          const success = Math.random() > 0.2;
+          if (success) {
+            blueDropMessage.textContent = 'Transfer Complete!';
+            blueDropActionButton.textContent = 'Close';
+          } else {
+            blueDropMessage.textContent = 'Transfer Failed';
+            blueDropActionButton.textContent = 'Retry';
+          }
+        }, 3000);
+      } else if (blueDropActionButton.textContent === 'Cancel') {
+        blueDropMessage.textContent = 'Transfer Cancelled';
+        blueDropActionButton.textContent = 'Retry';
+      } else if (blueDropActionButton.textContent === 'Close') {
+        stopBlueDrop();
+      } else if (blueDropActionButton.textContent === 'Retry') {
+        blueDropMessage.textContent = 'Tap to start BlueDrop';
+        blueDropActionButton.textContent = 'Start';
+      }
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+  
+  
+// GSAP Registration
+gsap.registerPlugin(MotionPathPlugin);
+
+(function () {
+    const fluidBackground = document.getElementById('fluidBackground');
+    const topFluid = document.getElementById('topFluid');
+    const blueDropActionButton = document.getElementById('blueDropActionButton');
+    let isAnimating = false; // Prevents overlapping animations
+
+    // Initial burst animation
+    function initialBurst() {
+        gsap.to(fluidBackground, {
+            scale: 1.5,
+            opacity: 1,
+            duration: 0.4,
+            ease: 'power3.out',
+        });
+    }
+
+    // Continuous pulsating animation
+    function pulsateEffect() {
+        gsap.to(fluidBackground, {
+            scale: 1.3,
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+        });
+    }
+
+    // Fluid-like transfer animation
+    function transferEffect() {
+        // Fluid background motion
+        gsap.to(fluidBackground, {
+            motionPath: {
+                path: [
+                    { x: 0, y: 0 },
+                    { x: 0, y: -100 },
+                    { x: 0, y: -200 },
+                    { x: 0, y: -300 },
+                ],
+                curviness: 1.5,
+            },
+            scale: 2,
+            opacity: 0,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: resetState,
+        });
+
+        // Top fluid motion
+        gsap.to(topFluid, {
+            motionPath: {
+                path: [
+                    { x: 0, y: 0 },
+                    { x: -50, y: -100 },
+                    { x: 50, y: -200 },
+                    { x: 0, y: -300 },
+                ],
+                curviness: 2,
+            },
+            scale: 1.8,
+            opacity: 0,
+            duration: 2.5,
+            ease: 'power3.inOut',
+        });
+    }
+
+    // Reset state after animation
+    function resetState() {
+        gsap.set(fluidBackground, { scale: 0.8, opacity: 0, y: 0 });
+        gsap.set(topFluid, { scale: 0.8, opacity: 0, y: 0 });
+        isAnimating = false; // Allow new animations to start
+    }
+
+    // Start animation sequence
+    function startAnimation() {
+        if (isAnimating) return; // Prevent overlapping animations
+        isAnimating = true;
+
+        // Step 1: Initial burst
+        initialBurst();
+
+        // Step 2: Pulsating effect (continuous)
+        setTimeout(() => {
+            pulsateEffect();
+        }, 500);
+
+        // Step 3: Transfer effect after delay
+        setTimeout(() => {
+            transferEffect();
+        }, 2000);
+    }
+
+    // Attach event listener to button
+    if (blueDropActionButton) {
+        blueDropActionButton.addEventListener('click', startAnimation);
+    } else {
+        console.error('blueDropActionButton not found!');
+    }
+})();
+
+
+  
+  </script>
+  
 </body>
 </html>
