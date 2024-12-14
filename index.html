@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enhanced Fluid BlueDrop Animation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Physics2DPlugin.min.js"></script>
   <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -38,6 +39,9 @@
       --button-bg: #333;
       --button-shadow: #111;
       --primary-color: #0077ff;
+         --waveform-color-1: #4a86e8;
+        --waveform-color-2: #d36582;
+        --waveform-color-3: #9248cc;
     }
 
     /* Light mode variables */
@@ -47,6 +51,9 @@
       --button-bg: #e0e0e0;
       --button-shadow: #cccccc;
       --primary-color: #0077ff;
+         --waveform-color-1: #0077ff;
+        --waveform-color-2: #ff0077;
+         --waveform-color-3: #00ff99;
     }
 
     /* Main content styles */
@@ -79,17 +86,26 @@
     }
 
     /* Siri-like animation styles */
-    .siri-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1000;
-      pointer-events: none;
-      overflow: hidden;
-      perspective: 1000px;
-    }
+     .siri-animation {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1000;
+          pointer-events: none;
+          overflow: hidden;
+          perspective: 1000px;
+          display: none; /* Initially hidden */
+           background: rgba(0, 0, 0, 0.7); /* Transparent dark overlay */
+      }
+
+        .siri-animation.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
 
     .wave {
       position: absolute;
@@ -99,6 +115,57 @@
       filter: blur(40px);
       transform-style: preserve-3d;
     }
+      .waveform-container {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+            width: 80%;
+          height: 20%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+
+        .waveform-bar {
+          width: 3px;
+          height: 10%;
+           background: linear-gradient(var(--waveform-color-1), var(--waveform-color-2), var(--waveform-color-3));
+          margin: 0 4px;
+          border-radius: 2px;
+        }
+
+         .context-icon {
+              position: absolute;
+                top: 30%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              font-size: 80px;
+              color: white;
+              opacity: 0;
+              transition: opacity 0.3s ease, transform 0.3s ease;
+              text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+          }
+
+          .live-transcription {
+              position: absolute;
+              bottom: 10%;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 80%;
+              text-align: center;
+              color: white;
+              font-size: 1.2rem;
+              font-family: 'Rajdhani', sans-serif;
+              opacity: 0;
+              transition: opacity 0.3s ease, transform 0.3s ease;
+              max-height: 100px;
+              overflow-y: auto;
+               text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+          }
+
+
 
     /* Edge lighting styles */
     .edge-light {
@@ -561,7 +628,11 @@
   </div>
 
   <!-- Siri-like Animation -->
-  <div class="siri-animation" id="siriAnimation"></div>
+  <div class="siri-animation" id="siriAnimation">
+        <div class="waveform-container" id="waveformContainer"></div>
+          <div class="context-icon" id="contextIcon"></div>
+      <div class="live-transcription" id="liveTranscription"></div>
+      </div>
   <div class="edge-light edge-light-top" id="edgeLightTop"></div>
   <div class="edge-light edge-light-bottom" id="edgeLightBottom"></div>
   <div class="edge-light edge-light-left" id="edgeLightLeft"></div>
@@ -655,6 +726,9 @@
   <script>
   /* Global variables */
     const siriAnimation = document.getElementById('siriAnimation');
+     const waveformContainer = document.getElementById('waveformContainer');
+     const contextIcon = document.getElementById('contextIcon');
+     const liveTranscription = document.getElementById('liveTranscription');
     const edgeLights = [
       document.getElementById('edgeLightTop'),
       document.getElementById('edgeLightBottom'),
@@ -796,15 +870,72 @@
         },
       });
   }
+       function createWaveformBars() {
+           waveformContainer.innerHTML = '';
+           const numBars = 30;
+           for (let i = 0; i < numBars; i++) {
+               const bar = document.createElement('div');
+               bar.className = 'waveform-bar';
+               waveformContainer.appendChild(bar);
+           }
+        }
+
+
+    function animateWaveform() {
+            const bars = document.querySelectorAll('.waveform-bar');
+            bars.forEach((bar, index) => {
+              const delay = index * 0.05;
+              const randomHeight = Math.random() * 0.5 + 0.5; // Random height between 0.5 and 1
+              const randomDelay = delay + (Math.random() * 0.2 - 0.1); // Slight random delay
+              const tl = gsap.timeline({ repeat: -1, });
+                tl.to(bar, {
+                    scaleY: randomHeight,
+                    duration: 0.3,
+                   ease: 'power2.inOut',
+                     delay: randomDelay,
+                });
+            });
+    }
+
   
-  function triggerSiriAnimation() {
+  function triggerSiriAnimation(query) {
       if (isAnimating) return;
       isAnimating = true;
-  
+       siriAnimation.classList.add('active');
+       siriAnimation.style.display = 'flex';
       triggerHapticFeedback();
+    
+    
+        // Create and animate the waveform
+            createWaveformBars();
+            animateWaveform();
+
+
+       // Set context-aware icon and transciption if present
+      let icon = '';
+       if (query && query.toLowerCase().includes('weather')) {
+        icon = '☀️';
+       } else if (query && query.toLowerCase().includes('music')) {
+         icon = '🎵';
+       }
+       contextIcon.textContent = icon;
+
+         if (query) {
+            liveTranscription.textContent = query;
+          } else {
+            liveTranscription.textContent = '';
+         }
+
+       gsap.to([contextIcon, liveTranscription], {
+           opacity: 1,
+            duration: 0.4,
+             ease: 'power2.inOut',
+            });
   
       siriAnimation.innerHTML = '';
-      siriAnimation.style.display = 'block';
+      siriAnimation.appendChild(waveformContainer);
+      siriAnimation.appendChild(contextIcon);
+       siriAnimation.appendChild(liveTranscription);
   
       gsap.to([mainContent, settingsPanel], {
           scale: 0.98,
@@ -839,8 +970,17 @@
           delay: 4,
           ease: 'power2.inOut',
           onComplete: () => {
+             siriAnimation.classList.remove('active');
+              gsap.to([contextIcon, liveTranscription], {
+                 opacity: 0,
+                  duration: 0.2,
+                   ease: 'power2.inOut',
+                 });
               siriAnimation.style.display = 'none';
+            
               isAnimating = false;
+            waveformContainer.innerHTML = '';
+             gsap.set('.waveform-bar', { clearProps: 'all' });
           },
       });
   }
@@ -891,7 +1031,15 @@
     });
 
     function simulateNotification() {
-      triggerSiriAnimation();
+        const queries = [
+             'What\'s the weather like today?',
+            'Play my favorite playlist',
+            'Remind me to take out the trash',
+             'Set a timer for 15 minutes',
+              'Call John Doe'
+          ]
+      const randomQuery = queries[Math.floor(Math.random() * queries.length)];
+      triggerSiriAnimation(randomQuery);
       new Notification('New Message', {
         body: 'You have received a new message.',
       });
