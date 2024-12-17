@@ -423,172 +423,163 @@
       transform: translateY(2px);
     }
 
-    /* BlueDrop Animation Styles */
-    #blueDropAnimation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
+    /* Update existing BlueDrop Animation Styles */
+#blueDropAnimation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
 
-    .bluedrop-container {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 320px;
-        height: 320px;
-        background: #ffffff;
-        border-radius: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-        overflow: hidden;
-    }
+.bluedrop-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  height: 320px;
+  background: #ffffff;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+}
 
-    .bluedrop-container .fluid {
-          width: 150%;
-          height: 150%;
-           transform: scale(0.8) translateY(20%);
-        }
+.bluedrop-container .fluid {
+  width: 150%;
+  height: 150%;
+  transform: scale(0.8) translateY(20%);
+}
 
-    #fluidCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  
-  .fluid {
-        position: absolute;
-        width: 150%;
-        height: 150%;
-        background: linear-gradient(135deg, 
-          rgba(0, 122, 255, 0.8),
-          rgba(88, 86, 214, 0.8),
-          rgba(255, 45, 85, 0.8)
-        );
-        border-radius: 30px;
-        filter: blur(20px);
-        opacity: 0.8;
-         transform: scale(0.8) translateY(20%);
-    }
+#fluidCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-    .fluid::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/png;base64,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UmVhZHlxyWU8AAADKGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDphZmZkOWYzZC1hNzQ1LTRlNzQtYWQwZC0zNzg4NDJjZmFiMTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTFCNTY0N0Y5RUJGMTFFQTlDMTNERTM0MkZBRTY5NjgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTFCNTY0N0U5RUJGMTFFQTlDMTNERTM0MkZBRTY5NjgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6YWZmZDlmM2QtYTc0NS00ZTc0LWFkMGQtMzc4ODQyY2ZhYjExIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOmFmZmQ5ZjNkLWE3NDUtNGU3NC1hZDBkLTM3ODg0MmNmYWIxMSIvPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
-      background-blend-mode: overlay;
-      mix-blend-mode: overlay;
-    }
+.fluid {
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.8),
+    rgba(88, 86, 214, 0.8),
+    rgba(255, 45, 85, 0.8)
+  );
+  border-radius: 30px;
+  filter: blur(20px);
+  opacity: 0.8;
+  transform: scale(0.8) translateY(20%);
+}
 
-    .bluedrop-content {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-family: 'Orbitron', sans-serif;
-    }
+.fluid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/png;base64,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UmVhZHlxyWU8AAADKGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDphZmZkOWYzZC1hNzQ1LTRlNzQtYWQwZC0zNzg4NDJjZmFiMTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTFCNTY0N0Y5RUJGMTFFQTlDMTNERTM0MkZBRTY5NjgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTFCNTY0N0U5RUJGMTFFQTlDMTNERTM0MkZBRTY5NjgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6YWZmZDlmM2QtYTc0NS00ZTc0LWFkMGQtMzc4ODQyY2ZhYjExIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOmFmZmQ5ZjNkLWE3NDUtNGU3NC1hZDBkLTM3ODg0MmNmYWIxMSIvPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
+  background-blend-mode: overlay;
+  mix-blend-mode: overlay;
+}
 
-      .bluedrop-message {
-        opacity: 1;
-        font-family: 'Rajdhani', sans-serif;
-        font-size: 20px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        transition: opacity 0.3s ease, transform 0.5s ease;
-    }
-    .bluedrop-success-message,
-    .bluedrop-error-message,
-     .bluedrop-loading-message{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 28px;
-      font-weight: bold;
-      color: #ffffff;
-      opacity: 0;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .bluedrop-success-message {
-        font-family: 'Orbitron', sans-serif;
-        color: #4CAF50;
-    }
+.bluedrop-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+}
 
-    .bluedrop-error-message {
-      font-family: 'Exo', sans-serif;
-      color: #F44336;
-    }
+.bluedrop-message {
+  opacity: 1;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: opacity 0.3s ease, transform 0.5s ease;
+}
 
-    .bluedrop-loading-message {
-       font-family: 'Rajdhani', sans-serif;
-      color: #2196F3;
-      animation: loadingText 1.5s infinite ease-in-out;
-    }
+.bluedrop-success-message,
+.bluedrop-error-message,
+.bluedrop-loading-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
 
-      /* Retry button redesigned for premium aesthetics */
-    .bluedrop-retry-button {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 12px 24px;
-        background-color: #343A40; /* Neutral, premium color */
-        color: #ffffff;
-        border: 2px solid #4CAF50; /* Adds contrast and elegance */
-        border-radius: 10px;
-        font-size: 16px;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        opacity: 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    }
+.bluedrop-success-message {
+  font-family: 'Orbitron', sans-serif;
+  color: #4CAF50;
+}
 
-    .bluedrop-retry-button:hover {
-        transform: translate(-50%, -2px) scale(1.02);
-        background-color: #3E4349; /* Slightly lighter on hover */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    }
-        /* Loading animation for the transferring message */
-          @keyframes loadingText {
-        0% {
-          transform: translate(-50%, -50%);
-        }
-        25% {
-          transform: translate(-50%, -48%);
-        }
-        50% {
-          transform: translate(-50%, -50%);
-        }
-        75% {
-          transform: translate(-50%, -52%);
-        }
-        100% {
-          transform: translate(-50%, -50%);
-        }
-      }
+.bluedrop-error-message {
+  font-family: 'Exo', sans-serif;
+  color: #F44336;
+}
+
+.bluedrop-loading-message {
+  font-family: 'Rajdhani', sans-serif;
+  color: #2196F3;
+  animation: loadingText 1.5s infinite ease-in-out;
+}
+
+.bluedrop-retry-button {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  background-color: #343A40;
+  color: #ffffff;
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  opacity: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.bluedrop-retry-button:hover {
+  transform: translate(-50%, -2px) scale(1.02);
+  background-color: #3E4349;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes loadingText {
+  0% { transform: translate(-50%, -50%); }
+  25% { transform: translate(-50%, -48%); }
+  50% { transform: translate(-50%, -50%); }
+  75% { transform: translate(-50%, -52%); }
+  100% { transform: translate(-50%, -50%); }
+}
 
 
     .bluedrop-button {
@@ -616,12 +607,162 @@
       background: none;
       border: none;
     }
+  
+  
+  
+  
+  
+    /* Settings Icon */
+    .settings-icon {
+      background: linear-gradient(145deg, #e6e9ef, #ffffff);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 4px 4px 10px #c7c9d1, -4px -4px 10px #ffffff;
+      transition: all 0.3s ease;
+      z-index:10;
+    }
+
+    .settings-icon:active {
+      transform: scale(0.95);
+      box-shadow: inset 4px 4px 6px #c7c9d1, inset -4px -4px 6px #ffffff;
+    }
+
+    .settings-icon::before {
+      content: '⚙️';
+      font-size: 2.8rem;
+      color: #6c757d;
+    }
+
+    /* Popup Container */
+    .popup-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      text-align: center;
+      padding: 25px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index:1000;
+    }
+
+    .popup-container.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    h3 {
+      margin: 0 0 15px;
+      color: #333;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
+
+    /* Toggle Buttons */
+    .toggle-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(145deg, #f0f3f7, #ffffff);
+      border-radius: 12px;
+      padding: 12px 20px;
+      box-shadow: 4px 4px 10px #c7c9d1, -4px -4px 10px #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .toggle:hover {
+      transform: scale(1.02);
+    }
+
+    .toggle-label {
+      font-size: 1.2rem;
+      color: #555;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+    }
+
+    .toggle-button {
+      width: 55px;
+      height: 30px;
+      background-color: #ddd;
+      border-radius: 25px;
+      position: relative;
+      transition: background-color 0.3s;
+      box-shadow: inset 2px 2px 5px #bbb, inset -2px -2px 5px #ffffff;
+    }
+
+    .toggle-button::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(145deg, #e6e9ef, #ffffff);
+      border-radius: 50%;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      box-shadow: 2px 2px 4px #c7c9d1, -2px -2px 4px #ffffff;
+    }
+
+    .toggle.active .toggle-button {
+      background-color: #4cd964;
+      box-shadow: inset 2px 2px 5px #3cbf54, inset -2px -2px 5px #5ef176;
+    }
+
+    .toggle.active .toggle-button::before {
+      transform: translateX(25px) scale(1.1);
+    }
+
+    .toggle.active .toggle-label {
+      color: #4cd964;
+    }
+
+    /* Close Button */
+    .close-btn {
+      margin-top: 20px;
+      background: #ff3b30;
+      border: none;
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 4px 4px 8px #c13228, -4px -4px 8px #ff5a4f;
+      transition: all 0.3s;
+    }
+
+    .close-btn:hover {
+      transform: scale(1.05);
+      background: #d62c23;
+    }
   </style>
 </head>
 <body>
   <!-- Main Content -->
   <div class="content" id="mainContent">
-    <h1>BlueDrop, Dynamic Island With IOS Animation</h1>
+    <h1>Welcome To Shamase Animation</h1>
     <p>Experience the next-level interactive animation!</p>
     <!-- BlueDrop Button -->
     <button id="blueDropButton">BlueDrop</button>
@@ -672,7 +813,7 @@
         <div class="module-icon">📞</div>
         <div class="module-details">
           <div class="module-title">Active Call</div>
-          <div class="module-subtitle">John Doe</div>
+          <div class="module-subtitle">Shamase</div>
           <div class="expanded-content">Mute | Speaker | End Call</div>
         </div>
       </div>
@@ -688,6 +829,28 @@
       </div>
     </div>
   </div>
+  
+
+  <!-- Popup Container -->
+  <div class="popup-container" id="popup">
+    <h3>Settings</h3>
+    <div class="toggle-container">
+      <div class="toggle" id="dynamic-toggle">
+        <span class="toggle-label">Dynamic Island</span>
+        <div class="toggle-button"></div>
+      </div>
+      <div class="toggle" id="bluedrop-toggle">
+        <span class="toggle-label">BlueDrop</span>
+        <div class="toggle-button"></div>
+      </div>
+      <div class="toggle" id="siri-toggle">
+        <span class="toggle-label">Siri Animation</span>
+        <div class="toggle-button"></div>
+      </div>
+    </div>
+    <button class="close-btn" id="close-btn">Close</button>
+  </div>
+
 
   <!-- Settings Panel -->
   <div class="settings-panel" id="settingsPanel">
@@ -702,25 +865,29 @@
       <button id="accessibilityCheck">Enable Accessibility</button>
     </div>
     <div class="settings-option">
+      <button id="settings-icon">Disable Each</button>
+    </div>
+    <div class="settings-option">
       <button onclick="triggerSiriAnimation()">Test Animation</button>
     </div>
   </div>
 
-  <!-- BlueDrop Animation -->
-  <div id="blueDropAnimation">
-    <div class="bluedrop-container">
-      <canvas id="fluidCanvas"></canvas>
-      <div class="fluid" id="fluidBackground"></div>
-      <div class="bluedrop-content">
-          <div class="bluedrop-message" id="bluedropMessage">Tap to start BlueDrop</div>
-            <div class="bluedrop-success-message" id="bluedropSuccessMessage">Transfer Complete!</div>
-            <div class="bluedrop-error-message" id="bluedropErrorMessage">Transfer Failed</div>
-             <div class="bluedrop-loading-message" id="bluedropLoadingMessage">Transferring...</div>
-          <button class="bluedrop-retry-button" id="bluedropRetryButton">Retry</button>
-      </div>
+  <!-- Add this inside the existing BlueDrop Animation div -->
+<div id="blueDropAnimation">
+  <div class="bluedrop-container">
+    <canvas id="fluidCanvas"></canvas>
+    <div class="fluid" id="fluidBackground"></div>
+    <div class="bluedrop-content">
+      <div class="bluedrop-message" id="bluedropMessage">Tap to start BlueDrop</div>
+      <div class="bluedrop-success-message" id="bluedropSuccessMessage">Transfer Complete!</div>
+      <div class="bluedrop-error-message" id="bluedropErrorMessage">Transfer Failed</div>
+      <div class="bluedrop-loading-message" id="bluedropLoadingMessage">Transferring...</div>
+      <button class="bluedrop-retry-button" id="bluedropRetryButton">Retry</button>
     </div>
-    <button class="bluedrop-close" id="blueDropClose">×</button>
   </div>
+  <button class="bluedrop-close" id="blueDropClose">×</button>
+</div>
+
 
   
   <script>
@@ -1036,7 +1203,7 @@
             'Play my favorite playlist',
             'Remind me to take out the trash',
              'Set a timer for 15 minutes',
-              'Call John Doe'
+              'Call Shamase'
           ]
       const randomQuery = queries[Math.floor(Math.random() * queries.length)];
       triggerSiriAnimation(randomQuery);
@@ -1083,231 +1250,246 @@
       });
     });
 
-    /* BlueDrop Animation */
-    const blueDropButton = document.getElementById('blueDropButton');
-    const blueDropAnimation = document.getElementById('blueDropAnimation');
-    const blueDropClose = document.getElementById('blueDropClose');
-      const bluedropMessage = document.getElementById('bluedropMessage');
-    const bluedropSuccessMessage = document.getElementById('bluedropSuccessMessage');
-    const bluedropErrorMessage = document.getElementById('bluedropErrorMessage');
-    const bluedropLoadingMessage = document.getElementById('bluedropLoadingMessage');
-     const bluedropRetryButton = document.getElementById('bluedropRetryButton');
-    const fluidCanvas = document.getElementById('fluidCanvas');
-    const ctx = fluidCanvas.getContext('2d');
+    // Add these variables at the beginning of your script
+const bluedropMessage = document.getElementById('bluedropMessage');
+const bluedropSuccessMessage = document.getElementById('bluedropSuccessMessage');
+const bluedropErrorMessage = document.getElementById('bluedropErrorMessage');
+const bluedropLoadingMessage = document.getElementById('bluedropLoadingMessage');
+const bluedropRetryButton = document.getElementById('bluedropRetryButton');
+const fluidCanvas = document.getElementById('fluidCanvas');
+const ctx = fluidCanvas.getContext('2d');
 
-    let animationFrameId;
-    let particles = [];
-    let isBlueDropActive = false;
-    
-     const startSound = new Howl({
-            src: ['https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3']
-        });
+let animationFrameId;
+let particles = [];
+let isBlueDropActive = false;
 
-        const successSound = new Howl({
-            src: ['https://assets.mixkit.co/sfx/preview/mixkit-magical-soft-sweep-2014.mp3']
-        });
+const startSound = new Howl({
+  src: ['https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3']
+});
 
-        const errorSound = new Howl({
-            src: ['https://assets.mixkit.co/sfx/preview/mixkit-alert-quick-chime-766.mp3']
-        });
+const successSound = new Howl({
+  src: ['https://assets.mixkit.co/sfx/preview/mixkit-magical-soft-sweep-2014.mp3']
+});
 
+const errorSound = new Howl({
+  src: ['https://assets.mixkit.co/sfx/preview/mixkit-alert-quick-chime-766.mp3']
+});
 
-    function resizeCanvas() {
-      fluidCanvas.width = fluidCanvas.offsetWidth;
-      fluidCanvas.height = fluidCanvas.offsetHeight;
-      initParticles();
-    }
-    
-    function initParticles() {
-        particles = [];
-        const particleCount = 150;
-        for (let i = 0; i < particleCount; i++) {
-            particles.push({
-                x: Math.random() * fluidCanvas.width,
-                y: Math.random() * fluidCanvas.height,
-                radius: Math.random() * 2 + 1,
-                color: `hsla(${Math.random() * 360}, 100%, 60%, ${Math.random() * 0.8 + 0.2})`,
-                vx: Math.random() * 1 - 0.5,
-                vy: Math.random() * 1 - 0.5,
-                gravity: 0.02,
-                alpha: 1,
-            });
-        }
-    }
+function resizeCanvas() {
+  fluidCanvas.width = fluidCanvas.offsetWidth;
+  fluidCanvas.height = fluidCanvas.offsetHeight;
+  initParticles();
+}
 
-    function drawParticles() {
-        ctx.clearRect(0, 0, fluidCanvas.width, fluidCanvas.height);
-        particles.forEach(particle => {
-            ctx.beginPath();
-            ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-            ctx.fillStyle = particle.color;
-            ctx.fill();
+function initParticles() {
+  particles = [];
+  const particleCount = 150;
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * fluidCanvas.width,
+      y: Math.random() * fluidCanvas.height,
+      radius: Math.random() * 2 + 1,
+      color: `hsla(${Math.random() * 360}, 100%, 60%, ${Math.random() * 0.8 + 0.2})`,
+      vx: Math.random() * 1 - 0.5,
+      vy: Math.random() * 1 - 0.5,
+      gravity: 0.02,
+      alpha: 1,
+    });
+  }
+}
 
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-            particle.vy += particle.gravity;
-            particle.alpha -= 0.01;
+function drawParticles() {
+  ctx.clearRect(0, 0, fluidCanvas.width, fluidCanvas.height);
+  particles.forEach(particle => {
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+    ctx.fillStyle = particle.color;
+    ctx.fill();
 
-            if (particle.x < 0 || particle.x > fluidCanvas.width) particle.vx *= -1;
-            if (particle.y < 0 || particle.y > fluidCanvas.height) {
-                particle.y = fluidCanvas.height;
-                particle.vy *= -0.5;
-            }
+    particle.x += particle.vx;
+    particle.y += particle.vy;
+    particle.vy += particle.gravity;
+    particle.alpha -= 0.01;
 
-            if (particle.alpha <= 0) {
-                particle.x = Math.random() * fluidCanvas.width;
-                particle.y = Math.random() * fluidCanvas.height;
-                particle.alpha = 1;
-                particle.vy = Math.random() * 1 - 0.5;
-            }
-        });
-
-        animationFrameId = requestAnimationFrame(drawParticles);
-    }
-    
-     function lerp(start, end, t) {
-      return start * (1 - t) + end * t;
-    }
-     function animateFluid() {
-            gsap.to(fluidBackground, {
-                rotation: 360,
-                duration: 20,
-                repeat: -1,
-                ease: 'none',
-            });
-            gsap.to(fluidBackground, {
-                 scale: 1.2,
-                duration: 4,
-                repeat: -1,
-                 yoyo: true,
-                 ease: 'sine.inOut',
-            });
-        }
-
-    function startBlueDrop() {
-      blueDropAnimation.style.display = 'flex';
-        resizeCanvas();
-          drawParticles();
-           animateFluid();
-      isBlueDropActive = true;
+    if (particle.x < 0 || particle.x > fluidCanvas.width) particle.vx *= -1;
+    if (particle.y < 0 || particle.y > fluidCanvas.height) {
+      particle.y = fluidCanvas.height;
+      particle.vy *= -0.5;
     }
 
-    function stopBlueDrop() {
-        blueDropAnimation.style.display = 'none';
-        cancelAnimationFrame(animationFrameId);
-        isBlueDropActive = false;
-         gsap.set(fluidBackground, { clearProps: 'all' });
-        // Reset button and message
-         gsap.set(bluedropMessage, { opacity: 1 });
-           gsap.to([bluedropSuccessMessage, bluedropErrorMessage, bluedropRetryButton], {
-                opacity: 0,
-                 scale: 0.8,
-                duration: 0.5,
-                 ease: 'power2.inOut',
-           });
-
+    if (particle.alpha <= 0) {
+      particle.x = Math.random() * fluidCanvas.width;
+      particle.y = Math.random() * fluidCanvas.height;
+      particle.alpha = 1;
+      particle.vy = Math.random() * 1 - 0.5;
     }
+  });
 
-    blueDropButton.addEventListener('click', startBlueDrop);
-    blueDropClose.addEventListener('click', stopBlueDrop);
+  animationFrameId = requestAnimationFrame(drawParticles);
+}
 
-        async function startTransfer() {
-             if (isAnimating) return;
-             isAnimating = true;
+function animateFluid() {
+  gsap.to(fluidBackground, {
+    rotation: 360,
+    duration: 20,
+    repeat: -1,
+    ease: 'none',
+  });
+  gsap.to(fluidBackground, {
+    scale: 1.2,
+    duration: 4,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+  });
+}
 
-              startSound.play();
-    
-            gsap.to(bluedropMessage, {
-                  opacity: 0,
-                    duration: 0.3,
-             });
-             gsap.to(fluidBackground, {
-              scale: 1.5,
-               opacity: 1,
-               duration: 0.5,
-             ease: 'power2.inOut',
-            });
-             gsap.to(bluedropLoadingMessage, {
-                  opacity: 1,
-                    scale: 1,
-                  duration: 0.5,
-                    ease: 'back.out(1.7)',
-              });
-           await new Promise(resolve => setTimeout(resolve, 2000));
+function startBlueDrop() {
+  blueDropAnimation.style.display = 'flex';
+  resizeCanvas();
+  drawParticles();
+  animateFluid();
+  isBlueDropActive = true;
+}
 
-        // Simulate a random success or failure
-             const isSuccess = Math.random() > 0.2;
-            gsap.to(bluedropLoadingMessage, {
-            opacity: 0,
-              scale: 0.8,
-                duration: 0.5,
-             ease: 'power2.inOut',
-            });
+function stopBlueDrop() {
+  blueDropAnimation.style.display = 'none';
+  cancelAnimationFrame(animationFrameId);
+  isBlueDropActive = false;
+  gsap.set(fluidBackground, { clearProps: 'all' });
+  gsap.set(bluedropMessage, { opacity: 1 });
+  gsap.to([bluedropSuccessMessage, bluedropErrorMessage, bluedropRetryButton], {
+    opacity: 0,
+    scale: 0.8,
+    duration: 0.5,
+    ease: 'power2.inOut',
+  });
+}
 
-           if (isSuccess) {
-              successSound.play();
-                gsap.to(bluedropSuccessMessage, {
-                opacity: 1,
-                  scale: 1,
-                    duration: 0.5,
-                  ease: 'back.out(1.7)',
-             });
-            } else {
-             errorSound.play();
-                gsap.to(bluedropErrorMessage, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                 ease: 'back.out(1.7)',
-                });
-                gsap.to(bluedropRetryButton, {
-                   opacity: 1,
-                    duration: 0.5,
-                     delay: 1,
-                });
-            }
-               gsap.to(fluidBackground, {
-               y: '-150%',
-              scale: 2,
-                opacity: 0,
-               duration: 1.5,
-                ease: 'power2.inOut',
-              });
-            if (isSuccess) {
-               await new Promise(resolve => setTimeout(resolve, 2500));
-               resetAnimation();
-             }
-    }
-    
-      function resetAnimation() {
-              gsap.to([bluedropSuccessMessage, bluedropErrorMessage, bluedropRetryButton], {
-                  opacity: 0,
-                    scale: 0.8,
-                     duration: 0.5,
-                     ease: 'power2.inOut',
-                 onComplete: () => {
-                      gsap.set(fluidBackground, { clearProps: 'all' });
-                         gsap.set(bluedropMessage, { opacity: 1 });
-                        animateFluid();
-                          isAnimating = false;
-                    },
-                });
-    }
-        
-        
-         bluedropRetryButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-           resetAnimation();
-            });
+async function startTransfer() {
+  if (isAnimating) return;
+  isAnimating = true;
 
-     blueDropAnimation.addEventListener('click', startTransfer);
-    
-    window.addEventListener('resize', resizeCanvas);
+  startSound.play();
 
-    // GSAP Registration
+  gsap.to(bluedropMessage, {
+    opacity: 0,
+    duration: 0.3,
+  });
+  gsap.to(fluidBackground, {
+    scale: 1.5,
+    opacity: 1,
+    duration: 0.5,
+    ease: 'power2.inOut',
+  });
+  gsap.to(bluedropLoadingMessage, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.5,
+    ease: 'back.out(1.7)',
+  });
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  const isSuccess = Math.random() > 0.2;
+  gsap.to(bluedropLoadingMessage, {
+    opacity: 0,
+    scale: 0.8,
+    duration: 0.5,
+    ease: 'power2.inOut',
+  });
+
+  if (isSuccess) {
+    successSound.play();
+    gsap.to(bluedropSuccessMessage, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+      ease: 'back.out(1.7)',
+    });
+  } else {
+    errorSound.play();
+    gsap.to(bluedropErrorMessage, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+      ease: 'back.out(1.7)',
+    });
+    gsap.to(bluedropRetryButton, {
+      opacity: 1,
+      duration: 0.5,
+      delay: 1,
+    });
+  }
+  gsap.to(fluidBackground, {
+    y: '-150%',
+    scale: 2,
+    opacity: 0,
+    duration: 1.5,
+    ease: 'power2.inOut',
+  });
+  if (isSuccess) {
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    resetAnimation();
+  }
+}
+
+function resetAnimation() {
+  gsap.to([bluedropSuccessMessage, bluedropErrorMessage, bluedropRetryButton], {
+    opacity: 0,
+    scale: 0.8,
+    duration: 0.5,
+    ease: 'power2.inOut',
+    onComplete: () => {
+      gsap.set(fluidBackground, { clearProps: 'all' });
+      gsap.set(bluedropMessage, { opacity: 1 });
+      animateFluid();
+      isAnimating = false;
+    },
+  });
+}
+
+// Event Listeners
+blueDropButton.addEventListener('click', startBlueDrop);
+blueDropClose.addEventListener('click', stopBlueDrop);
+bluedropRetryButton.addEventListener('click', (e) => {
+  e.stopPropagation();
+  resetAnimation();
+});
+blueDropAnimation.addEventListener('click', startTransfer);
+window.addEventListener('resize', resizeCanvas);
+
+// GSAP Registration
 gsap.registerPlugin(MotionPathPlugin);
 
 
+  </script>
+  
+    <!-- JavaScript -->
+  <script>
+    const settingsIcon = document.getElementById('settings-icon');
+    const popup = document.getElementById('popup');
+    const closeBtn = document.getElementById('close-btn');
+    const toggles = document.querySelectorAll('.toggle');
+
+    // Open popup
+    settingsIcon.addEventListener('click', () => {
+      popup.classList.add('show');
+      navigator.vibrate?.(50);
+    });
+
+    // Close popup
+    closeBtn.addEventListener('click', () => {
+      popup.classList.remove('show');
+      navigator.vibrate?.(30);
+    });
+
+    // Toggle functionality
+    toggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        navigator.vibrate?.(50);
+      });
+    });
   </script>
 </body>
 </html>
